@@ -1,3 +1,5 @@
+from Buildings import Floor, Room
+
 class Measurement:
     """
     This class represents a measurement taken from a sensor.
@@ -28,6 +30,14 @@ class SmartHouse:
         This method registers a new floor at the given level in the house
         and returns the respective floor object.
         """
+        if level in self.floors: # skjekker om 
+            ValueError(f"Floor {level} already exists. ")
+            
+        floor = Floor(level) #Oppretter ny etasje med angitt nivå
+        self.floors[level] = floor #lagres i self.floors (Dictionary med etasje som nøkkel)
+        return floor #returnerer det nye etasjenivået
+        
+        
 
     def register_room(self, floor, room_size, room_name = None):
         """
