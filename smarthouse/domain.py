@@ -50,16 +50,33 @@ class HumiditySensor(Sensor):
 
 class PressureSensor(Sensor):
     Measurement.Unit = "hPa"
+    airPressure = 0
+
+    def getAirPressure(self):
+
 
 class WindSpeedSensor(Sensor):
     Measurement.Unit = "mph"
     windSpeed = 0
 
     def getWindSpeed(self):
-        self.windSpeed = random.randint(1,100)
+        self.windSpeed = random.randint(1,35)
+
+    Measurement.Value = windSpeed
+    return
 
 class WindDirectionSensor(Sensor):
     Measurement.Unit = "deg"
+    windDirection = 0
+    def getWindDirection(self):
+        self.windDirection = random.randint(0,360)
+
+        if((self.windDirection > 330)and(self.windDirection < 30)):
+            print("wind direction is SW")
+        elif((self.windDirection > 240)and(self.windDirection < 330)):
+            print("wind direction is S")
+        elif((self.windDirection > 210)and(self.windDirection < 240)):
+            print("wind direction is S")
 
 class WindGustSensor(Sensor):
     Measurement.Unit = "deg"
