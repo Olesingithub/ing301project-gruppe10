@@ -21,11 +21,9 @@ class Floor:
         self.rooms.append(room)
         
     def calculate_area(self):
-        return sum(room.area for room in self.rooms)
-    
-    def __str__(self):
-        return f"Floor: {self.floor_number}, Total Area: {self.calculate_area()} m²"
-    
+        return sum(room.area for room in self.rooms)  
+
+"""
 # bruker for å teste kode    
 class Building: 
     def __init__(self, name: str):
@@ -40,8 +38,8 @@ class Building:
     
     def __str__(self):
         return f"Building {self.name}, Total area: {self.calculate_total_area()} m² "
-    
-
+"""
+        
 """
 # Test
 room1 = Room("Living Room", 30)

@@ -1,4 +1,3 @@
-from Buildings import Floor, Room
 
 class Measurement:
     """
@@ -13,7 +12,30 @@ class Measurement:
 
 
 # TODO: Add your own classes here!
+
+class Room:
+    def __init__(self,name: str, area: float):
+        if area < 0:
+          raise  ValueError("Area can not be negative")
+        self.name = name    
+        self.area = area
+        
+    def __str__(self):
+        return f"Room: {self.name}, Area: {self.area} m²" 
     
+
+class Floor:
+    def __init__(self, floor_number):
+        if floor_number < 0:
+           raise ValueError("Floor number can not be negative")
+        self.floor_number = floor_number
+        self.rooms: list[Room] = []
+    
+    def add_room(self, room: Room):
+        self.rooms.append(room)
+        
+    def calculate_area(self):
+        return sum(room.area for room in self.rooms)  
 
 class SmartHouse:
     """
@@ -51,12 +73,12 @@ class SmartHouse:
         This methods registers a new room with the given room areal size 
         at the given floor. Optionally the room may be assigned a mnemonic name.
         """
-        if floor not in self.floors: # skjekker om etasjen allerede finnes i self.floors
-          raise ValueError(f"Floor {floor} does not exist. Please register the floor first.")
+        if floor.floor_number not in self.floors: # skjekker om etasjen allerede finnes i self.floors
+          raise ValueError(f"Floor {floor.floor_number} does not exist. Please register the floor first.")
         
         room_name = room_name if room_name else f"Room {len(self.floors[floor].rooms)+ 1}" # ikke nødvendig, men generer defaut romnavn Room i+1
         room = Room(room_name,room_size)
-        self.floors[floor].add_room(room)
+        self.floors[floor.floor_number].add_room(room)
         return room
 
         
@@ -114,7 +136,7 @@ class SmartHouse:
         return house_info
         
     
-
+"""
  # Test
 if __name__ == "__main__":
     house = SmartHouse("My Smart House")
@@ -129,7 +151,7 @@ if __name__ == "__main__":
     house.register_room(2, 20, "Bedroom")
 
     print(house)
-
+"""
    
 
 
