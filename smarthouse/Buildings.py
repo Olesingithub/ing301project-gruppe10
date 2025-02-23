@@ -2,7 +2,7 @@
 class Room:
     def __init__(self,name: str, area: float):
         if area < 0:
-            ValueError("Area can not be negative")
+          raise  ValueError("Area can not be negative")
         self.name = name    
         self.area = area
         
@@ -13,9 +13,9 @@ class Room:
 class Floor:
     def __init__(self, floor_number):
         if floor_number < 0:
-            ValueError("Floor number can not be negative")
+           raise ValueError("Floor number can not be negative")
         self.floor_number = floor_number
-        self.rooms =[] # self.rooms: List[room] = []
+        self.rooms: list[Room] = []
     
     def add_room(self, room: Room):
         self.rooms.append(room)
@@ -26,11 +26,11 @@ class Floor:
     def __str__(self):
         return f"Floor: {self.floor_number}, Total Area: {self.calculate_area()} m²"
     
-    
-class Building:
+# bruker for å teste kode    
+class Building: 
     def __init__(self, name: str):
         self.name = name
-        self.floors = [] # self.floor: List[Floor] = []
+        self.floors: list[Floor] = [] 
         
     def add_floor(self, floor: Floor):
             self.floors.append(floor)
@@ -41,6 +41,18 @@ class Building:
     def __str__(self):
         return f"Building {self.name}, Total area: {self.calculate_total_area()} m² "
     
+
+"""
+# Test
+room1 = Room("Living Room", 30)
+room2 = Room("Kitchen", 15)
+floor1 = Floor(1)
+floor1.add_room(room1)
+floor1.add_room(room2)
+building = Building("My House")
+building.add_floor(floor1)
+print(building)
+"""
     
     
     
