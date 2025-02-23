@@ -1,6 +1,4 @@
-from Buildings import Building, Floor, Room
-from datetime import datetime
-import random
+from Buildings import Floor, Room
 
 class Measurement:
     """
@@ -12,64 +10,9 @@ class Measurement:
         self.value = value
         self.unit = unit
 
-class Device:
-    """
-    This class represents a device that is either a sensor or an actuator.
-    """
-    def __init__(self, name, device_id, device_type):
-        self.name = name
-        self.device_id = device_id
-        self.device_type = device_type
-
-    def __str__getDeviceType(self):
-        if self.device_type == "sensor":
-            return "Sensor"
-        elif self.device_type == "actuator":
-            return "Actuator"
-
-class Sensor:
-    def __init__(self, sensorID, sensorType, sensorValue):
-        self.device_id = sensorID
-        self.sensorType = sensorType
-        self.sensorValue = sensorValue
-        self.measurements =
-
-    def __int__getSensorID(self):
-        last_sensorID = self.device_id
-        self.sensorID = random.randint(1, 10000)
-        append(last_sensorID, self.sensorID)
-        if (self.sensorID == ):
-        return self.device_id
-
-class TemperatureSensor(Sensor):
-    Measurement.Unit = "C"
 
 
-class HumiditySensor(Sensor):
-    Measurement.Unit = "%"
-
-class PressureSensor(Sensor):
-    Measurement.Unit = "hPa"
-
-class WindSpeedSensor(Sensor):
-    Measurement.Unit = "mph"
-    windSpeed = 0
-
-    def getWindSpeed(self):
-        self.windSpeed = random.randint(1,100)
-
-class WindDirectionSensor(Sensor):
-    Measurement.Unit = "deg"
-
-class WindGustSensor(Sensor):
-    Measurement.Unit = "deg"
-
-class WindChillSensor(Sensor):
-    Measurement.Unit = "mph"
-
-
-
-    # TODO: Add your own classes here!
+# TODO: Add your own classes here!
 
 
 class SmartHouse:
