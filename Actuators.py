@@ -1,16 +1,36 @@
-class Actuator:
-    def __init__(self, name: str, id: int):
-        self.name = name
-        self.id = id
-        self.state = False  # False betyr "av", True betyr "på"
+# Actuator.py
+
+from domain import Device
+
+class Actuator(Device):
+    """
+    Actuator class for the SmartHouse project.
+    Inherits from Device and represents a device that can be switched on or off.
+    """
+    def __init__(self, name: str, device_id: int):
+        # Initialize as a device with device_type set to "actuator"
+        super().__init__(name, device_id, "actuator")
+        self.state = False  # Initial state is OFF
 
     def turn_on(self):
+        """Switch the actuator on."""
         self.state = True
-        print(f"{self.name} (ID: {self.id}) er nå PÅ")
+        print(f"{self.name} (ID: {self.device_id}) is now ON")
 
     def turn_off(self):
+        """Switch the actuator off."""
         self.state = False
-        print(f"{self.name} (ID: {self.id}) er nå AV")
+        print(f"{self.name} (ID: {self.device_id}) is now OFF")
 
     def get_status(self):
-        return f"{self.name} (ID: {self.id}) er {'PÅ' if self.state else 'AV'}"
+        """Return the current status of the actuator."""
+        return f"{self.name} (ID: {self.device_id}) is {'ON' if self.state else 'OFF'}"
+        
+# Example usage (for testing purposes only)
+if __name__ == "__main__":
+    actuator = Actuator("Main Light", 101)
+    print(actuator.get_status())
+    actuator.turn_on()
+    print(actuator.get_status())
+    actuator.turn_off()
+    print(actuator.get_status())
