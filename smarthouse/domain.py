@@ -6,7 +6,7 @@ class Measurement:
     """
     This class represents a measurement taken from a sensor.
     """
-
+    
     def __init__(self, timestamp, value, unit):
         self.timestamp = timestamp
         self.value = value
@@ -32,14 +32,14 @@ class Sensor:
         self.device_id = sensorID
         self.sensorType = sensorType
         self.sensorValue = sensorValue
-        self.measurements =
+        #self.measurements =
 
     def __int__getSensorID(self):
         last_sensorID = self.device_id
         self.sensorID = random.randint(1, 10000)
         append(last_sensorID, self.sensorID)
         if (self.sensorID == ):
-        return self.device_id
+         return self.device_id
 
 class TemperatureSensor(Sensor):
     Measurement.Unit = "C"
