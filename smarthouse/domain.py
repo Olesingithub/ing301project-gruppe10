@@ -1,4 +1,4 @@
-from Buildings import Floor, Room
+#from Buildings import Floor, Room
 from datetime import datetime
 import random
 
@@ -63,7 +63,8 @@ class WindSpeedSensor(Sensor):
         self.windSpeed = random.randint(1,35)
 
     Measurement.Value = windSpeed
-    return
+    #return
+    pass
 
 class WindDirectionSensor(Sensor):
     Measurement.Unit = "deg"
@@ -84,9 +85,28 @@ class WindGustSensor(Sensor):
 class WindChillSensor(Sensor):
     Measurement.Unit = "mph"
 
+   
+   
+# TODO: Add your own classes here!
+
+class Actuator:
+    def __init__(self, name: str, id: int):
+        self.name = name
+        self.id = id
+        self.state = False  # False betyr "av", True betyr "på"
+
+    def turn_on(self):
+        self.state = True
+        print(f"{self.name} (ID: {self.id}) er nå PÅ")
+
+    def turn_off(self):
+        self.state = False
+        print(f"{self.name} (ID: {self.id}) er nå AV")
+
+    def get_status(self):
+        return f"{self.name} (ID: {self.id}) er {'PÅ' if self.state else 'AV'}"
 
 
-    # TODO: Add your own classes here!
 
 class Room:
     def __init__(self,name: str, area: float):
