@@ -38,15 +38,16 @@ class Device:
         return f"Device ID: {self.device_id}, Supplier: {self.supplier}, Model: {self.model_name}, Type: {self.get_device_type()}"
 
 class Sensor(Device):
-    def __init__(self, sensorID, sensorType, sensorValue):
+    def __init__(self, sensorID, supplier, sensorValue):
         super.device_id = sensorID
-        self.sensorType = sensorType
+        super.supplier = supplier
         self.sensorValue = sensorValue
         self.last_measurement_timestamp = None
 
-
     def measure(Measurment):
-        Measurement.last_measurement_timestamp =
+        Measurment.last_measurement_timestamp = datetime.now()
+        Measurment.last_measurement_value = Measurment.sensorValue
+        Measurment.device_type = "sensor"
 
     def getSensorID(self):
         
@@ -79,6 +80,7 @@ class Co2Sensor(Sensor):
 
 class Co2Sensor(Sensor):
     Measurement.Unit = "ppm"
+    room =
    
    
 # TODO: Add your own classes here!
