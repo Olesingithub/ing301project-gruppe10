@@ -5,26 +5,6 @@ DEMO_HOUSE = SmartHouse("Our_House")
 # Building house structure
 # TODO: continue registering the remaining floor, rooms and devices
 
-
-ground_floor = DEMO_HOUSE.register_floor(1)
-second_floor = DEMO_HOUSE.register_floor(2)
-
-#etage 1 
-Garage = DEMO_HOUSE.register_room(ground_floor, 19, "Garage")
-entrance = DEMO_HOUSE.register_room(ground_floor, 13.5, "Entrance")
-Guest_Room_1 = DEMO_HOUSE.register_room(ground_floor, 8, "Guest_Room_1")
-Bathroom = DEMO_HOUSE.register_room(ground_floor, 6.3, "Bathroom")
-LivingRoom_Kitchen = DEMO_HOUSE.register_room(ground_floor, 39.75, "LivingRoom_Kitchen")
-
-# etage 2
-Guest_Room_2 = DEMO_HOUSE.register_room(second_floor, 8, "Guest_Room_2")
-Bathroom_2 = DEMO_HOUSE.register_room(second_floor, 9.25, "Bathroom_2")
-Office = DEMO_HOUSE.register_room(second_floor, 11.75, "Office")
-Hallway = DEMO_HOUSE.register_room(second_floor, 10, "Hallway")
-Guest_Room_3 = DEMO_HOUSE.register_room(second_floor, 10, "Guest_Room_3")
-Dressing_room = DEMO_HOUSE.register_room(second_floor, 4, "Dressing_room")
-Master_bedroom = DEMO_HOUSE.register_room(second_floor, 17, "Master_bedroom")
-
 # Enheter som er sensorer
 co2_sensor = Device("8a43b2d7-e8d3-4f3d-b832-7dbf37bf629e", "ElysianTech", "Smoke Warden 1000", "sensor")
 electricity_meter = Device("a2f8690f-2b3a-43cd-90b8-9deea98b42a7", "MysticEnergy Innovations", "Volt Watch Elite", "sensor")
@@ -42,6 +22,29 @@ smart_oven_2 = Device("c1e8fa9c-4bb8d-487a-a1a5-2b148ee9d2d1", "IgnisTech Soluti
 smart_plug = Device("1a66c3d6-22b2-44fe-bf5c-eb5b9d1a8c79", "MysticEnergy Innovations", "FlowState X", "actuator")
 dehumidifier = Device("9e5b8274-4e77-4e4e-80d2-b40d648e802a", "ArcaneTech Solutions", "Hydra Dry 8000", "actuator")
 light_bulb = Device("6b1c5f6b-37f6-4e3d-9145-1cfbe2f1fc28", "Elysian Tech", "Lumina Glow 4000", "actuator")
+
+
+ground_floor = DEMO_HOUSE.register_floor(1)
+second_floor = DEMO_HOUSE.register_floor(2)
+
+#etage 1 
+Garage = DEMO_HOUSE.register_room(ground_floor, 19, "Garage")
+entrance = DEMO_HOUSE.register_room(ground_floor, 13.5, "Entrance")
+entrance.add_device(smart_lock)
+Guest_Room_1 = DEMO_HOUSE.register_room(ground_floor, 8, "Guest_Room_1")
+Bathroom = DEMO_HOUSE.register_room(ground_floor, 6.3, "Bathroom")
+LivingRoom_Kitchen = DEMO_HOUSE.register_room(ground_floor, 39.75, "LivingRoom_Kitchen")
+
+# etage 2
+Guest_Room_2 = DEMO_HOUSE.register_room(second_floor, 8, "Guest_Room_2")
+Bathroom_2 = DEMO_HOUSE.register_room(second_floor, 9.25, "Bathroom_2")
+Office = DEMO_HOUSE.register_room(second_floor, 11.75, "Office")
+Hallway = DEMO_HOUSE.register_room(second_floor, 10, "Hallway")
+Guest_Room_3 = DEMO_HOUSE.register_room(second_floor, 10, "Guest_Room_3")
+Dressing_room = DEMO_HOUSE.register_room(second_floor, 4, "Dressing_room")
+Master_bedroom = DEMO_HOUSE.register_room(second_floor, 17, "Master_bedroom")
+
+
 
 
 #print(DEMO_HOUSE)
