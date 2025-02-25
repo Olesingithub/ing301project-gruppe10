@@ -47,13 +47,17 @@ class TemperatureSensor(Sensor):
 
 class HumiditySensor(Sensor):
     Measurement.Unit = "%"
+    humidityValue = 0
+
+    def getHumidityValue(self):
+        self.humidityValue = random.randint(1, 100)
 
 class PressureSensor(Sensor):
     Measurement.Unit = "hPa"
     airPressure = 0
 
     def getAirPressure(self):
-
+        self.airPressure = random.randint(900, 1500)
 
 class WindSpeedSensor(Sensor):
     Measurement.Unit = "mph"
