@@ -43,24 +43,28 @@ class Device:
 class Sensor(Device):
     def __init__(self, sensor_id, supplier, model_name, device_id, device_type):
         super().__init__(device_id, supplier, model_name, device_type)
-        super().device_id = sensor_id
+        super().device_id = device_id
         super().supplier = supplier
         super().model_name = model_name
-        self.last_measurement_timestamp = None
-        self.last_measurement_value = 0
-        self.last_measurement_unit = None
+        super().device_type = device_type
+        Measurement().__init__(timestamp, value, unit)
+        Measurement.timestamp = None
+        Measurement.value = 0
+        Measurement.unit = self.last_measurement_unit
 
     def last_measurement(self):
-        self.last_measurement_timestamp = Measurement().timestamp
-        self.last_measurement_value = Measurement().value
-        self.last_measurement_unit = Measurement(string).unit
+        self.last_measurement_timestamp = Measurement.timestamp
+        self.last_measurement_value = Measurement.value
+        self.last_measurement_unit = Measurement.unit
 
 class TemperatureSensor(Sensor):
-    def __init__(self, sensor_id, supplier, sensorValue, model_name):
-        super().__init__(sensor_id, supplier, model_name)
+    def __init__(self, sensor_id, supplier, model_name, device_id, device_type):
+        super().__init__(sensor_id, supplier, model_name, device_id, device_type)
         self.name = temperature_sensor
-        super().sensor_id = self.device_id
-        super().supplier = self.supplier
+        super().sensor_id = self.name.device_id
+        super().supplier = self.name.supplier
+        super().model_name = self.name.model_name
+        super().device_type = self.name.device_type
 
     Measurement.Unit = "C"
     temperature = 0
@@ -72,11 +76,13 @@ class TemperatureSensor(Sensor):
 
 
 class HumiditySensor(Sensor):
-    def __init__(self, sensor_id, supplier, model_name):
-        super().__init__(sensor_id, supplier, model_name)
+    def __init__(self, sensor_id, supplier, model_name, device_id, device_type):
+        super().__init__(sensor_id, supplier, model_name, device_id, device_type)
         self.name = humidity_sensor
-        super().sensor_id = self.device_id
-        super().supplier = self.supplier
+        super().sensor_id = self.name.device_id
+        super().supplier = self.name.supplier
+        super().model_name = self.name.model_name
+        super().device_type = self.name.device_type
 
     Measurement.Unit = "%"
     humidityValue = 0
@@ -86,28 +92,35 @@ class HumiditySensor(Sensor):
         return self.humidityValue
 
 class MotionSensor(Sensor):
-    def __init__(self, sensor_id, supplier, model_name):
-        super().__init__(sensor_id, supplier, model_name)
+    def __init__(self, sensor_id, supplier, model_name, device_id, device_type):
+        super().__init__(sensor_id, supplier, model_name, device_id, device_type)
         self.name = motion_sensor
-        super().sensor_id = self.device_id
-        super().supplier = self.supplier
+        super().sensor_id = self.name.device_id
+        super().supplier = self.name.supplier
+        super().model_name = self.name.model_name
+        super().device_type = self.name.device_type
+
     Measurement.Unit = "mps"
 
 class AirQualitySensor(Sensor):
-    def __init__(self, sensor_id, supplier, model_name):
-        super().__init__(sensor_id, supplier, model_name)
+    def __init__(self, sensor_id, supplier, model_name, device_id, device_type):
+        super().__init__(sensor_id, supplier, model_name, device_id, device_type)
         self.name = air_quality_sensor
-        super().sensor_id = self.device_id
-        super().supplier = self.supplier
+        super().device_id = self.name.device_id
+        super().supplier = self.name.supplier
+        super().model_name = self.name.model_name
+        super().device_type = self.name.device_type
 
     Measurement.Unit = "%"
 
 class Co2Sensor(Sensor):
-    def __init__(self, sensor_id, supplier, model_name):
-        super().__init__(sensor_id, supplier, model_name)
+    def __init__(self, sensor_id, supplier, model_name, device_id, device_type):
+        super().__init__(sensor_id, supplier, model_name, device_id, device_type)
         self.name = co2_sensor
-        super().sensor_id = self.device_id
-        super().supplier = self.supplier
+        super().device_id = self.name.device_id
+        super().supplier = self.name.supplier
+        super().model_name = self.name.model_name
+        super().device_type = self.name.device_type
 
     Measurement.Unit = "ppm"
    
