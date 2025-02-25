@@ -123,14 +123,18 @@ class Actuator:
 
 
 class Room:
-    def __init__(self,name: str, area: float):
+    def __init__(self, name: str, area: float):
         if area < 0:
-          raise  ValueError("Area can not be negative")
-        self.name = name    
+            raise ValueError("Area can not be negative")
+        self.name = name
         self.area = area
-        
+        self.devices = []  # Liste over enheter i rommet
+
+    def add_device(self, device):
+        self.devices.append(device)
+
     def __str__(self):
-        return f"Room: {self.name}, Area: {self.area} m²" 
+        return f"Room: {self.name}, Area: {self.area} m²"
     
 
 class Floor:
@@ -161,7 +165,7 @@ class SmartHouse:
         initialiserer et smartHouse med et gitt navn
         """
         self.name = name
-        self.floors : dict[Floor] = {} # lagrer etasjer som dictionary {etasjenummer: floor}
+        self.floors : dict[int, Floor] = {} # lagrer etasjer som dictionary {etasjenummer: floor}
 
     def register_floor(self, level):
         """
@@ -225,14 +229,24 @@ class SmartHouse:
         """
         This methods registers a given device in a given room.
         """
-        pass
+        if not isinstance(room, Room):
+            raise ValueError("Invalid room")
+        if not isinstance(device, Device):
+            raise ValueError("Invalid device")
+
+        room.add_device(device)
 
     
     def get_device(self, device_id):
         """
         This method retrieves a device object via its id.
         """
-        pass
+        for floor in self.floors.values():
+            for room in floor.rooms:
+                for device in room.devices:
+                    if device.device_id == device_id:
+                        return device
+        return None  # Returnerer None hvis enheten ikke finnes
     
     def __str__(self):
         house_info = f"SmartHouse: {self.name}, Total Area: {self.get_area()} m²\n"
