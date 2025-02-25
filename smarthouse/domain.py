@@ -16,18 +16,28 @@ class Device:
     """
     This class represents a device that is either a sensor or an actuator.
     """
-    def __init__(self, name, device_id, device_type):
-        self.name = name
+    def __init__(self, device_id, supplier, model_name, device_type):
         self.device_id = device_id
+        self.supplier = supplier
+        self.model_name = model_name
         self.device_type = device_type
 
-    def __str__getDeviceType(self):
-        if self.device_type == "sensor":
-            return "Sensor"
-        elif self.device_type == "actuator":
-            return "Actuator"
+    def is_actuator(self):
+        """Returnerer True hvis enheten er en aktuator, ellers False."""
+        return self.device_type.lower() == "actuator"
 
-class Sensor:
+    def is_sensor(self):
+        """Returnerer True hvis enheten er en sensor, ellers False."""
+        return self.device_type.lower() == "sensor"
+
+    def get_device_type(self):
+        """Returnerer en beskrivelse av enhetstypen."""
+        return self.device_type
+
+    def __str__(self):
+        return f"Device ID: {self.device_id}, Supplier: {self.supplier}, Model: {self.model_name}, Type: {self.get_device_type()}"
+
+class Sensor(Device):
     def __init__(self, sensorID, sensorType, sensorValue):
         self.device_id = sensorID
         self.sensorType = sensorType
