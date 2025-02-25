@@ -1,7 +1,6 @@
 #from Buildings import Floor, Room
 from datetime import datetime
 import random
-
 from tests.demo_house import co2_sensor, air_quality_sensor, motion_sensor, humidity_sensor, temperature_sensor
 
 
@@ -41,17 +40,20 @@ class Device:
         return f"Device ID: {self.device_id}, Supplier: {self.supplier}, Model: {self.model_name}, Type: {self.get_device_type()}"
 
 class Sensor(Device):
-    def __init__(self, sensor_id, supplier, model_name, device_id, device_type):
+    def __init__(self, supplier, model_name, device_id, device_type = "sensor"):
         super().__init__(device_id, supplier, model_name, device_type)
+        self.last_measurement_unit = None
+        self.last_measurement_value = 0
+        self.last_measurement_timestamp = None
         super().device_id = device_id
         super().supplier = supplier
         super().model_name = model_name
-        super().device_type = device_type
+        super().device_type = self.device_type
 
-    def last_measurement(self):
-        self.last_measurement_timestamp = Measurement.timestamp
-        self.last_measurement_value = Measurement.value
-        self.last_measurement_unit = Measurement.unit
+    def measure(self):
+        self.last_measurement_timestamp = datetime.now()
+        self.last_measurement_value = 0
+        self.last_measurement_unit = ""
 
 class TemperatureSensor(Sensor):
     def __init__(self, supplier, model_name, device_id, device_type):
@@ -65,10 +67,9 @@ class TemperatureSensor(Sensor):
     Measurement.Unit = "C"
     temperature = 0
 
-    def getTemperature(self):
+    def get_temperature(self):
         self.temperature = random.randint(-20, 30)
         return self.temperature
-
 
 
 class HumiditySensor(Sensor):
@@ -83,7 +84,7 @@ class HumiditySensor(Sensor):
     Measurement.Unit = "%"
     humidityValue = 0
 
-    def getHumidityValue(self):
+    def get_humidity_value(self):
         self.humidityValue = random.randint(1, 100)
         return self.humidityValue
 
@@ -126,7 +127,7 @@ class Actuator(Device):
 
     def __init__(self, device_id: str, supplier: str, model_name: str):
         # Call the Device constructor
-        super().__init__(device_id, supplier, model_name)
+        super().__init__(device_id, supplier, model_name, device_type="actuator")
         self._active = False
         self._target_value = None
 
