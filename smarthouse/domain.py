@@ -1,4 +1,4 @@
-from Buildings import Floor, Room
+#from Buildings import Floor, Room
 from datetime import datetime
 import random
 
@@ -6,7 +6,7 @@ class Measurement:
     """
     This class represents a measurement taken from a sensor.
     """
-
+    
     def __init__(self, timestamp, value, unit):
         self.timestamp = timestamp
         self.value = value
@@ -32,14 +32,14 @@ class Sensor:
         self.device_id = sensorID
         self.sensorType = sensorType
         self.sensorValue = sensorValue
-        self.measurements =
+        #self.measurements =
 
     def __int__getSensorID(self):
         last_sensorID = self.device_id
         self.sensorID = random.randint(1, 10000)
         append(last_sensorID, self.sensorID)
         if (self.sensorID == ):
-        return self.device_id
+         return self.device_id
 
 class TemperatureSensor(Sensor):
     Measurement.Unit = "C"
@@ -47,13 +47,17 @@ class TemperatureSensor(Sensor):
 
 class HumiditySensor(Sensor):
     Measurement.Unit = "%"
+    humidityValue = 0
+
+    def getHumidityValue(self):
+        self.humidityValue = random.randint(1, 100)
 
 class PressureSensor(Sensor):
     Measurement.Unit = "hPa"
     airPressure = 0
 
     def getAirPressure(self):
-
+        self.airPressure = random.randint(900, 1500)
 
 class WindSpeedSensor(Sensor):
     Measurement.Unit = "mph"
@@ -63,7 +67,8 @@ class WindSpeedSensor(Sensor):
         self.windSpeed = random.randint(1,35)
 
     Measurement.Value = windSpeed
-    return
+    #return
+    pass
 
 class WindDirectionSensor(Sensor):
     Measurement.Unit = "deg"
@@ -84,9 +89,28 @@ class WindGustSensor(Sensor):
 class WindChillSensor(Sensor):
     Measurement.Unit = "mph"
 
+   
+   
+# TODO: Add your own classes here!
+
+class Actuator:
+    def __init__(self, name: str, id: int):
+        self.name = name
+        self.id = id
+        self.state = False  # False betyr "av", True betyr "på"
+
+    def turn_on(self):
+        self.state = True
+        print(f"{self.name} (ID: {self.id}) er nå PÅ")
+
+    def turn_off(self):
+        self.state = False
+        print(f"{self.name} (ID: {self.id}) er nå AV")
+
+    def get_status(self):
+        return f"{self.name} (ID: {self.id}) er {'PÅ' if self.state else 'AV'}"
 
 
-    # TODO: Add your own classes here!
 
 class Room:
     def __init__(self,name: str, area: float):
