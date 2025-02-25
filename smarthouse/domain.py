@@ -63,12 +63,14 @@ class TemperatureSensor(Sensor):
         super().supplier = self.name.supplier
         super().model_name = self.name.model_name
 
-    Measurement.Unit = "C"
+    Measurement.Unit = u'\xb0'+"C"
     temperature = 0
 
-    def get_temperature(self):
-        self.temperature = random.randint(-20, 30)
-        return self.temperature
+    def measure(self):
+        self.last_measurement_value = random.randint(-20, 30)
+        self.last_measurement_timestamp = datetime.now()
+        self.last_measurement_unit = Measurement.Unit
+        return
 
 
 class HumiditySensor(Sensor):
@@ -82,9 +84,11 @@ class HumiditySensor(Sensor):
     Measurement.Unit = "%"
     humidityValue = 0
 
-    def get_humidity_value(self):
-        self.humidityValue = random.randint(1, 100)
-        return self.humidityValue
+    def measure(self):
+        self.last_measurement_value = random.randint(1, 100)
+        self.last_measurement_timestamp = datetime.now()
+        self.last_measurement_unit = Measurement.Unit
+        return
 
 class MotionSensor(Sensor):
     def __init__(self, supplier, model_name, device_id):
@@ -96,6 +100,12 @@ class MotionSensor(Sensor):
 
     Measurement.Unit = "mps"
 
+    def measure(self):
+        self.last_measurement_value = random.randint(1, 100)
+        self.last_measurement_timestamp = datetime.now()
+        self.last_measurement_unit = Measurement.Unit
+        return
+
 class AirQualitySensor(Sensor):
     def __init__(self, supplier, model_name, device_id):
         self.name = air_quality_sensor
@@ -106,6 +116,12 @@ class AirQualitySensor(Sensor):
 
     Measurement.Unit = "%"
 
+    def measure(self):
+        self.last_measurement_value = random.randint(1, 100)
+        self.last_measurement_timestamp = datetime.now()
+        self.last_measurement_unit = Measurement.Unit
+        return
+
 class Co2Sensor(Sensor):
     def __init__(self, supplier, model_name, device_id):
         self.name = co2_sensor
@@ -115,6 +131,12 @@ class Co2Sensor(Sensor):
         super().model_name = self.name.model_name
 
     Measurement.Unit = "ppm"
+
+    def measure(self):
+        self.last_measurement_value = random.randint(1, 100)
+        self.last_measurement_timestamp = datetime.now()
+        self.last_measurement_unit = Measurement.Unit
+        return
    
 # TODO: Add your own classes here!
     
