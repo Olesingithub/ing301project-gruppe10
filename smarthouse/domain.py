@@ -38,22 +38,25 @@ class Device:
         return f"Device ID: {self.device_id}, Supplier: {self.supplier}, Model: {self.model_name}, Type: {self.get_device_type()}"
 
 class Sensor(Device):
-    def __init__(self, sensorID, sensorType, sensorValue):
-        self.device_id = sensorID
+    def init(self, sensorID, sensorType, sensorValue):
+        super.device_id = sensorID
         self.sensorType = sensorType
         self.sensorValue = sensorValue
-        #self.measurements =
+        self.last_measurement_timestamp = None
 
-    def __int__getSensorID(self):
-        last_sensorID = self.device_id
-        self.sensorID = random.randint(1, 10000)
-        append(last_sensorID, self.sensorID)
-        if (self.sensorID == ):
-         return self.device_id
+
+    def measure(Measurment):
+        Measurement.last_measurement_timestamp =
+
+    def getSensorID(self):
 
 class TemperatureSensor(Sensor):
     Measurement.Unit = "C"
+    Measurement.Value = self.temperature
 
+    def getTemperature(self):
+        self.temperature = random.randint(-20, 30)
+        return self.temperature
 
 class HumiditySensor(Sensor):
     Measurement.Unit = "%"
@@ -61,44 +64,16 @@ class HumiditySensor(Sensor):
 
     def getHumidityValue(self):
         self.humidityValue = random.randint(1, 100)
+        return self.humidityValue
 
-class PressureSensor(Sensor):
-    Measurement.Unit = "hPa"
-    airPressure = 0
+class MotionSensor(Sensor):
+    Measurement.Unit = "mps"
 
-    def getAirPressure(self):
-        self.airPressure = random.randint(900, 1500)
+class AirQualitySensor(Sensor):
+    Measurement.Unit = "%"
 
-class WindSpeedSensor(Sensor):
-    Measurement.Unit = "mph"
-    windSpeed = 0
-
-    def getWindSpeed(self):
-        self.windSpeed = random.randint(1,35)
-
-    Measurement.Value = windSpeed
-    #return
-    pass
-
-class WindDirectionSensor(Sensor):
-    Measurement.Unit = "deg"
-    windDirection = 0
-    def getWindDirection(self):
-        self.windDirection = random.randint(0,360)
-
-        if((self.windDirection > 330)and(self.windDirection < 30)):
-            print("wind direction is SW")
-        elif((self.windDirection > 240)and(self.windDirection < 330)):
-            print("wind direction is S")
-        elif((self.windDirection > 210)and(self.windDirection < 240)):
-            print("wind direction is S")
-
-class WindGustSensor(Sensor):
-    Measurement.Unit = "deg"
-
-class WindChillSensor(Sensor):
-    Measurement.Unit = "mph"
-
+class Co2Sensor(Sensor):
+    Measurement.Unit = "ppm"
    
    
 # TODO: Add your own classes here!
