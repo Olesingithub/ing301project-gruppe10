@@ -2,6 +2,9 @@
 from datetime import datetime
 import random
 
+from tests.demo_house import co2_sensor
+
+
 class Measurement:
     """
     This class represents a measurement taken from a sensor.
@@ -75,13 +78,8 @@ class AirQualitySensor(Sensor):
     Measurement.Unit = "%"
 
 class Co2Sensor(Sensor):
+    self.name = co2_sensor
     Measurement.Unit = "ppm"
-
-
-class Co2Sensor(Sensor):
-    Measurement.Unit = "ppm"
-    room =
-   
    
 # TODO: Add your own classes here!
     
