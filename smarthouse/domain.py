@@ -103,7 +103,7 @@ class WindChillSensor(Sensor):
    
 # TODO: Add your own classes here!
     
-    class Actuator(Device):
+class Actuator(Device):
 
     def __init__(self, device_id: str, supplier: str, model_name: str):
         # Call the Device constructor
