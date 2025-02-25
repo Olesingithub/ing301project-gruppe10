@@ -62,6 +62,7 @@ class TemperatureSensor(Sensor):
         super.supplier = self.supplier
 
     Measurement.Unit = "C"
+    temperature = 0
 
     def getTemperature(self):
         self.temperature = random.randint(-20, 30)
@@ -90,16 +91,16 @@ class MotionSensor(Sensor):
 class AirQualitySensor(Sensor):
     def __init__(self, sensor_id, supplier, sensorValue):
         self.name = air_quality_sensor
-        super.sensor_id = air_quality_sensor.device_id
-        super.supplier = air_quality_sensor.supplier
+        super.sensor_id = self.device_id
+        super.supplier = self.supplier
 
     Measurement.Unit = "%"
 
 class Co2Sensor(Sensor):
     def __init__(self, sensor_id, supplier, sensorValue):
         self.name = co2_sensor
-        super.sensor_id = co2_sensor.device_id
-        super.supplier = co2_sensor.supplier
+        super.sensor_id = self.device_id
+        super.supplier = self.supplier
 
     Measurement.Unit = "ppm"
    
