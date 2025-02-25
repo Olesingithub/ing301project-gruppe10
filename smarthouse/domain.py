@@ -56,13 +56,12 @@ class Sensor(Device):
         self.last_measurement_unit = ""
 
 class TemperatureSensor(Sensor):
-    def __init__(self, supplier, model_name, device_id, device_type):
+    def __init__(self, supplier, model_name, device_id):
         self.name = temperature_sensor
-        super().__init__(supplier, model_name, device_id, device_type)
+        super().__init__(supplier, model_name, device_id)
         super().device_id = self.name.device_id
         super().supplier = self.name.supplier
         super().model_name = self.name.model_name
-        super().device_type = self.name.device_type
 
     Measurement.Unit = "C"
     temperature = 0
@@ -73,13 +72,12 @@ class TemperatureSensor(Sensor):
 
 
 class HumiditySensor(Sensor):
-    def __init__(self, supplier, model_name, device_id, device_type):
+    def __init__(self, supplier, model_name, device_id):
         self.name = humidity_sensor
-        super().__init__(supplier, model_name, device_id, device_type)
-        super().sensor_id = self.name.device_id
+        super().__init__(supplier, model_name, device_id)
+        super().device_id = self.name.device_id
         super().supplier = self.name.supplier
         super().model_name = self.name.model_name
-        super().device_type = self.name.device_type
 
     Measurement.Unit = "%"
     humidityValue = 0
@@ -89,35 +87,32 @@ class HumiditySensor(Sensor):
         return self.humidityValue
 
 class MotionSensor(Sensor):
-    def __init__(self, supplier, model_name, device_id, device_type):
+    def __init__(self, supplier, model_name, device_id):
         self.name = motion_sensor
-        super().__init__(supplier, model_name, device_id, device_type)
-        super().sensor_id = self.name.device_id
+        super().__init__(supplier, model_name, device_id)
+        super().device_id = self.name.device_id
         super().supplier = self.name.supplier
         super().model_name = self.name.model_name
-        super().device_type = self.name.device_type
 
     Measurement.Unit = "mps"
 
 class AirQualitySensor(Sensor):
-    def __init__(self, supplier, model_name, device_id, device_type):
+    def __init__(self, supplier, model_name, device_id):
         self.name = air_quality_sensor
-        super().__init__(supplier, model_name, device_id, device_type)
+        super().__init__(supplier, model_name, device_id)
         super().device_id = self.name.device_id
         super().supplier = self.name.supplier
         super().model_name = self.name.model_name
-        super().device_type = "sensor"
 
     Measurement.Unit = "%"
 
 class Co2Sensor(Sensor):
-    def __init__(self, supplier, model_name, device_id, device_type):
+    def __init__(self, supplier, model_name, device_id):
         self.name = co2_sensor
-        super().__init__(supplier, model_name, device_id, device_type)
+        super().__init__(supplier, model_name, device_id)
         super().device_id = self.name.device_id
         super().supplier = self.name.supplier
         super().model_name = self.name.model_name
-        super().device_type = self.name.device_type
 
     Measurement.Unit = "ppm"
    
@@ -218,7 +213,7 @@ class SmartHouse:
 
     def register_room(self, floor, room_size, room_name = None):
         """
-        This methods registers a new room with the given room areal size 
+        This method registers a new room with the given room areal size
         at the given floor. Optionally the room may be assigned a mnemonic name.
         """
         if floor.floor_number not in self.floors: # skjekker om etasjen allerede finnes i self.floors
@@ -244,7 +239,7 @@ class SmartHouse:
 
     def get_rooms(self):
         """
-        This methods returns the list of all registered rooms in the house.
+        This method returns the list of all registered rooms in the house.
         The resulting list has no particular order.
         """
         rooms = []
@@ -255,14 +250,14 @@ class SmartHouse:
 
     def get_area(self):
         """
-        This methods return the total area size of the house, i.e. the sum of the area sizes of each room in the house.
+        This method return the total area size of the house, i.e. the sum of the area sizes of each room in the house.
         """
         return sum(floor.calculate_area() for floor in self.floors.values())
 
 
     def register_device(self, room, device):
         """
-        This methods registers a given device in a given room.
+        This method registers a given device in a given room.
         """
         if not isinstance(room, Room):
             raise ValueError("Invalid room")
