@@ -119,6 +119,60 @@ class Actuator:
 
     def get_status(self):
         return f"{self.name} (ID: {self.id}) er {'PÅ' if self.state else 'AV'}"
+    
+    class Actuator(Device):
+
+    def __init__(self, device_id: str, supplier: str, model_name: str):
+        # Call the Device constructor
+        super().__init__(device_id, supplier, model_name)
+        self._active = False
+        self._target_value = None
+
+    def is_actuator(self) -> bool:
+        return True
+
+    def get_device_type(self) -> str:
+        # Provide a more specific description than the base class
+        return f"Actuator ({self.model_name})"
+
+    def turn_on(self):
+        self._active = True
+        print(f"{self.model_name} turned ON.")
+
+    def turn_off(self):
+        self._active = False
+        print(f"{self.model_name} turned OFF.")
+
+    def is_active(self) -> bool:
+        return self._active
+
+    def set_target_value(self, value):
+        self._target_value = value
+
+    def get_target_value(self):
+        return self._target_value
+
+
+# Demo usage if we run this file directly:
+if __name__ == "__main__":
+    # Create an Actuator
+    heater = Actuator(device_id="A001", supplier="HeatCo", model_name="SmartHeater X")
+
+    # We can now use methods from BOTH Device (inherited) and Actuator
+    print(heater)  
+    # e.g. "Actuator (SmartHeater X) (ID=A001, Supplier=HeatCo, Model=SmartHeater X)"
+
+    # Check type
+    print("Is actuator?", heater.is_actuator())  # True (overridden in Actuator)
+    print("Is sensor?", heater.is_sensor())      # False (inherited default)
+
+    # Turn it on, set a target temperature, then turn it off
+    heater.turn_on()
+    heater.set_target_value(22.5)  
+    print("Is active?", heater.is_active())  
+    print("Target value:", heater.get_target_value())
+    heater.turn_off()
+    print("Is active?", heater.is_active())
 
 
 
