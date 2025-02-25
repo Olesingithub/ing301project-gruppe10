@@ -60,7 +60,7 @@ class TemperatureSensor(Sensor):
         self.name = temperature_sensor
         super.sensor_id = self.device_id
         super.supplier = self.supplier
-    
+
     Measurement.Unit = "C"
 
     def getTemperature(self):

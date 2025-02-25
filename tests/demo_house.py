@@ -1,4 +1,4 @@
-from smarthouse.domain import SmartHouse, Device, TemperatureSensor
+from smarthouse.domain import SmartHouse, Device
 
 DEMO_HOUSE = SmartHouse("Our_House")
 
