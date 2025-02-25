@@ -80,23 +80,6 @@ class Co2Sensor(Sensor):
    
    
 # TODO: Add your own classes here!
-
-class Actuator:
-    def __init__(self, name: str, id: int):
-        self.name = name
-        self.id = id
-        self.state = False  # False betyr "av", True betyr "på"
-
-    def turn_on(self):
-        self.state = True
-        print(f"{self.name} (ID: {self.id}) er nå PÅ")
-
-    def turn_off(self):
-        self.state = False
-        print(f"{self.name} (ID: {self.id}) er nå AV")
-
-    def get_status(self):
-        return f"{self.name} (ID: {self.id}) er {'PÅ' if self.state else 'AV'}"
     
     class Actuator(Device):
 
@@ -129,28 +112,6 @@ class Actuator:
 
     def get_target_value(self):
         return self._target_value
-
-
-# Demo usage if we run this file directly:
-if __name__ == "__main__":
-    # Create an Actuator
-    heater = Actuator(device_id="A001", supplier="HeatCo", model_name="SmartHeater X")
-
-    # We can now use methods from BOTH Device (inherited) and Actuator
-    print(heater)  
-    # e.g. "Actuator (SmartHeater X) (ID=A001, Supplier=HeatCo, Model=SmartHeater X)"
-
-    # Check type
-    print("Is actuator?", heater.is_actuator())  # True (overridden in Actuator)
-    print("Is sensor?", heater.is_sensor())      # False (inherited default)
-
-    # Turn it on, set a target temperature, then turn it off
-    heater.turn_on()
-    heater.set_target_value(22.5)  
-    print("Is active?", heater.is_active())  
-    print("Target value:", heater.get_target_value())
-    heater.turn_off()
-    print("Is active?", heater.is_active())
 
 
 
