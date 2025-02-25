@@ -2,7 +2,7 @@
 from datetime import datetime
 import random
 
-from tests.demo_house import co2_sensor
+from tests.demo_house import co2_sensor, air_quality_sensor, motion_sensor, humidity_sensor, temperature_sensor
 
 
 class Measurement:
@@ -41,8 +41,8 @@ class Device:
         return f"Device ID: {self.device_id}, Supplier: {self.supplier}, Model: {self.model_name}, Type: {self.get_device_type()}"
 
 class Sensor(Device):
-    def __init__(self, sensorID, supplier, sensorValue):
-        super.device_id = sensorID
+    def __init__(self, sensor_id, supplier, sensorValue):
+        super.device_id = sensor_id
         super.supplier = supplier
         self.sensorValue = sensorValue
         self.last_measurement_timestamp = None
@@ -56,14 +56,23 @@ class Sensor(Device):
         
 
 class TemperatureSensor(Sensor):
+    def __init__(self, sensor_id, supplier, sensorValue):
+        self.name = temperature_sensor
+        super.sensor_id = self.device_id
+        super.supplier = self.supplier
+    
     Measurement.Unit = "C"
-    Measurement.Value = self.temperature
 
     def getTemperature(self):
         self.temperature = random.randint(-20, 30)
         return self.temperature
 
 class HumiditySensor(Sensor):
+    def __init__(self, sensor_id, supplier, sensorValue):
+        self.name = humidity_sensor
+        super.sensor_id = self.device_id
+        super.supplier = self.supplier
+
     Measurement.Unit = "%"
     humidityValue = 0
 
@@ -72,13 +81,26 @@ class HumiditySensor(Sensor):
         return self.humidityValue
 
 class MotionSensor(Sensor):
+    def __init__(self, sensor_id, supplier, sensorValue):
+        self.name = motion_sensor
+        super.sensor_id = self.device_id
+        super.supplier = self.supplier
     Measurement.Unit = "mps"
 
 class AirQualitySensor(Sensor):
+    def __init__(self, sensor_id, supplier, sensorValue):
+        self.name = air_quality_sensor
+        super.sensor_id = air_quality_sensor.device_id
+        super.supplier = air_quality_sensor.supplier
+
     Measurement.Unit = "%"
 
 class Co2Sensor(Sensor):
-    self.name = co2_sensor
+    def __init__(self, sensor_id, supplier, sensorValue):
+        self.name = co2_sensor
+        super.sensor_id = co2_sensor.device_id
+        super.supplier = co2_sensor.supplier
+
     Measurement.Unit = "ppm"
    
 # TODO: Add your own classes here!
