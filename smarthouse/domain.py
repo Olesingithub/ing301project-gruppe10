@@ -1,7 +1,7 @@
 #from Buildings import Floor, Room
 from datetime import datetime
 import random
-from tests.demo_house import co2_sensor, air_quality_sensor, motion_sensor, humidity_sensor, temperature_sensor
+# tests.demo_house import co2_sensor, air_quality_sensor, motion_sensor, humidity_sensor, temperature_sensor
 
 
 class Measurement:
