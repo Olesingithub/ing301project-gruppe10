@@ -1,7 +1,7 @@
 #from Buildings import Floor, Room
 from datetime import datetime
 import random
-#from tests.demo_house import co2_sensor, air_quality_sensor, motion_sensor, humidity_sensor, temperature_sensor
+
 
 
 class Measurement:
@@ -60,39 +60,31 @@ class Co2Sensor(Sensor):
     def __init__(self, supplier, model_name, device_id, device_type):
         super().__init__(supplier, model_name, device_id, device_type)
 
-    #def measure(self):
-    #    return Measurement(datetime.now(), random.randint(-20, 30), self.param)
 
 class ElectricityMeter(Sensor):
     def __init__(self, supplier, model_name, device_id, device_type):
         super().__init__(supplier, model_name, device_id, device_type)
 
+
 class MotionSensor(Sensor):
     def __init__(self, supplier, model_name, device_id, device_type):
         super().__init__(supplier, model_name, device_id, device_type)
 
- #   def measure(self):
-    #    return Measurement(datetime.now(), random.randint(-20, 30), self.param)
 
 class HumiditySensor(Sensor):
     def __init__(self, supplier, model_name, device_id, device_type):
         super().__init__(supplier, model_name, device_id, device_type)
 
-    #def measure(self):
-    #    return Measurement(datetime.now(), random.randint(0, 100), self.param)
 
 class TemperatureSensor(Sensor):
     def __init__(self, supplier, model_name, device_id, device_type):
         super().__init__(supplier, model_name, device_id, device_type)
-    #def measure(self):
-    #    return Measurement(datetime.now(), random.randint(-20, 30), self.param)
+
 
 class AirQualitySensor(Sensor):
     def __init__(self, supplier, model_name, device_id, device_type):
         super().__init__(supplier, model_name, device_id, device_type)
 
-    #def measure(self):
-    #    return Measurement(datetime.now(), random.randint(-20, 30), self.param)
    
 # TODO: Add your own classes here!
     
