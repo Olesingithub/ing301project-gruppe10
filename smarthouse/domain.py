@@ -1,7 +1,7 @@
 #from Buildings import Floor, Room
 from datetime import datetime
 import random
-# tests.demo_house import co2_sensor, air_quality_sensor, motion_sensor, humidity_sensor, temperature_sensor
+#from tests.demo_house import co2_sensor, air_quality_sensor, motion_sensor, humidity_sensor, temperature_sensor
 
 
 class Measurement:
@@ -43,103 +43,56 @@ class Device:
         return f"Device ID: {self.device_id}, Supplier: {self.supplier}, Model: {self.model_name}, Type: {self.get_device_type()}"
 
 class Sensor(Device):
-    def __init__(self, supplier, model_name, device_id, device_type = "sensor"):
+    def __init__(self, device_id, supplier, model_name, device_type):
         super().__init__(device_id, supplier, model_name, device_type)
-        self.last_measurement_unit = None
-        self.last_measurement_value = 0
-        self.last_measurement_timestamp = None
-        super().device_id = device_id
-        super().supplier = supplier
-        super().model_name = model_name
-        super().device_type = self.device_type
-
-    def measure(self):
-        self.last_measurement_timestamp = datetime.now()
-        self.last_measurement_value = 0
-        self.last_measurement_unit = ""
-
-class TemperatureSensor(Sensor):
-    def __init__(self, supplier, model_name, device_id):
-        self.name = temperature_sensor
-        super().__init__(supplier, model_name, device_id)
-        super().device_id = self.name.device_id
-        super().supplier = self.name.supplier
-        super().model_name = self.name.model_name
-
-    Measurement.Unit = u'\xb0'+"C"
-    temperature = 0
-
-    def measure(self):
-        self.last_measurement_value = random.randint(-20, 30)
-        self.last_measurement_timestamp = datetime.now()
-        self.last_measurement_unit = Measurement.Unit
-        return
+    #    self.last_measurement_unit = None
+    #    self.last_measurement_value = 0
+    #    self.last_measurement_timestamp = None
 
 
-class HumiditySensor(Sensor):
-    def __init__(self, supplier, model_name, device_id):
-        self.name = humidity_sensor
-        super().__init__(supplier, model_name, device_id)
-        super().device_id = self.name.device_id
-        super().supplier = self.name.supplier
-        super().model_name = self.name.model_name
+    #def measure(self):
+    #    self.last_measurement_timestamp = datetime.now()
+    #    self.last_measurement_value = 0
+    #    self.last_measurement_unit = ""
 
-    Measurement.Unit = "%"
-    humidityValue = 0
-
-    def measure(self):
-        self.last_measurement_value = random.randint(1, 100)
-        self.last_measurement_timestamp = datetime.now()
-        self.last_measurement_unit = Measurement.Unit
-        return
-
-class MotionSensor(Sensor):
-    def __init__(self, supplier, model_name, device_id):
-        self.name = motion_sensor
-        super().__init__(supplier, model_name, device_id)
-        super().device_id = self.name.device_id
-        super().supplier = self.name.supplier
-        super().model_name = self.name.model_name
-
-    Measurement.Unit = "mps"
-
-    def measure(self):
-        self.last_measurement_value = random.randint(1, 100)
-        self.last_measurement_timestamp = datetime.now()
-        self.last_measurement_unit = Measurement.Unit
-        return
-
-class AirQualitySensor(Sensor):
-    def __init__(self, supplier, model_name, device_id):
-        self.name = air_quality_sensor
-        super().__init__(supplier, model_name, device_id)
-        super().device_id = self.name.device_id
-        super().supplier = self.name.supplier
-        super().model_name = self.name.model_name
-
-    Measurement.Unit = "%"
-
-    def measure(self):
-        self.last_measurement_value = random.randint(1, 100)
-        self.last_measurement_timestamp = datetime.now()
-        self.last_measurement_unit = Measurement.Unit
-        return
 
 class Co2Sensor(Sensor):
-    def __init__(self, supplier, model_name, device_id):
-        self.name = co2_sensor
-        super().__init__(supplier, model_name, device_id)
-        super().device_id = self.name.device_id
-        super().supplier = self.name.supplier
-        super().model_name = self.name.model_name
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
 
-    Measurement.Unit = "ppm"
+    #def measure(self):
+    #    return Measurement(datetime.now(), random.randint(-20, 30), self.param)
 
-    def measure(self):
-        self.last_measurement_value = random.randint(1, 100)
-        self.last_measurement_timestamp = datetime.now()
-        self.last_measurement_unit = Measurement.Unit
-        return
+class ElectricityMeter(Sensor):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+class MotionSensor(Sensor):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+ #   def measure(self):
+    #    return Measurement(datetime.now(), random.randint(-20, 30), self.param)
+
+class HumiditySensor(Sensor):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+    #def measure(self):
+    #    return Measurement(datetime.now(), random.randint(0, 100), self.param)
+
+class TemperatureSensor(Sensor):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+    #def measure(self):
+    #    return Measurement(datetime.now(), random.randint(-20, 30), self.param)
+
+class AirQualitySensor(Sensor):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+    #def measure(self):
+    #    return Measurement(datetime.now(), random.randint(-20, 30), self.param)
    
 # TODO: Add your own classes here!
     
