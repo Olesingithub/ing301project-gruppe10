@@ -89,10 +89,14 @@ class AirQualitySensor(Sensor):
 # TODO: Add your own classes here!
     
 class Actuator(Device):
+    def __init__(self, device_id, supplier, model_name, device_type):
+        self.device_id = device_id
+        self.supplier = supplier
+        self.model_name = model_name
+        self.device_type = device_type
 
-    def __init__(self, device_id: str, supplier: str, model_name: str):
         # Call the Device constructor
-        super().__init__(device_id, supplier, model_name, device_type="actuator")
+        super().__init__(device_id, supplier, model_name, device_type)
         self._active = False
         self._target_value = None
 
@@ -120,7 +124,37 @@ class Actuator(Device):
     def get_target_value(self):
         return self._target_value
 
+class SmartLock(Actuator):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
 
+class HeatPump(Actuator):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+class SmartOven1(Actuator):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+class AutomaticGarageDoor(Actuator):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+class SmartOven2(Actuator):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+class SmartPlug(Actuator):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+class Dehumidifier(Actuator):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
+
+class LightBulb(Actuator):
+    def __init__(self, supplier, model_name, device_id, device_type):
+        super().__init__(supplier, model_name, device_id, device_type)
 
 class Room:
     def __init__(self, name: str, area: float):

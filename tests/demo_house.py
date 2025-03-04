@@ -1,4 +1,4 @@
-from smarthouse.domain import SmartHouse, Actuator, Co2Sensor, ElectricityMeter, MotionSensor, HumiditySensor, TemperatureSensor, AirQualitySensor
+from smarthouse.domain import SmartHouse, Co2Sensor, ElectricityMeter, MotionSensor, HumiditySensor, TemperatureSensor, AirQualitySensor, SmartLock, HeatPump, SmartOven1, AutomaticGarageDoor, SmartOven2, SmartPlug, Dehumidifier, LightBulb
 
 DEMO_HOUSE = SmartHouse("Our_House")
 
@@ -14,14 +14,14 @@ temperature_sensor = TemperatureSensor("4d8b1d62-7921-4917-9b70-bbd31ff6e28e", "
 air_quality_sensor = AirQualitySensor("7c6e35e1-2d8b-4d81-a586-5d01a03bb02c", "CelestialSense Technologies", "AeroGuard Pro", "sensor")
 
 # Enheter som er aktuatorer
-smart_lock = Actuator("4d5f1ac6-906a-4fd1-b4bf-3a0671e4c4f1", "MythicalTech", "Guardian Lock 7000", "actuator")
-heat_pump = Actuator("5e13cabc-5c58-4bb3-82a2-3039e4480a6d", "ElysianTech", "Thermo Smart 6000", "actuator")
-smart_oven_1 = Actuator("8d4e4c98-21a9-4d1e-bf18-523285ad90f6", "AetherCorp", "Phennix HEAT 333", "actuator")
-automatic_garage_door = Actuator("9a54c1ec-0cb5-45a7-b20d-2a7349fb132", "MythicalTech", "Guardian Lock 9000", "actuator")
-smart_oven_2 = Actuator("c1e8fa9c-4bb8d-487a-a1a5-2b148ee9d2d1", "IgnisTech Solutions", "Ember Heat 3000", "actuator")
-smart_plug = Actuator("1a66c3d6-22b2-44fe-bf5c-eb5b9d1a8c79", "MysticEnergy Innovations", "FlowState X", "actuator")
-dehumidifier = Actuator("9e5b8274-4e77-4e4e-80d2-b40d648e802a", "ArcaneTech Solutions", "Hydra Dry 8000", "actuator")
-light_bulb = Actuator("6b1c5f6b-37f6-4e3d-9145-1cfbe2f1fc28", "Elysian Tech", "Lumina Glow 4000", "actuator")
+smart_lock = SmartLock("4d5f1ac6-906a-4fd1-b4bf-3a0671e4c4f1", "MythicalTech", "Guardian Lock 7000", "actuator")
+heat_pump = HeatPump("5e13cabc-5c58-4bb3-82a2-3039e4480a6d", "ElysianTech", "Thermo Smart 6000", "actuator")
+smart_oven_1 = SmartOven1("8d4e4c98-21a9-4d1e-bf18-523285ad90f6", "AetherCorp", "Phennix HEAT 333", "actuator")
+automatic_garage_door = AutomaticGarageDoor("9a54c1ec-0cb5-45a7-b20d-2a7349fb132", "MythicalTech", "Guardian Lock 9000", "actuator")
+smart_oven_2 = SmartOven2("c1e8fa9c-4bb8d-487a-a1a5-2b148ee9d2d1", "IgnisTech Solutions", "Ember Heat 3000", "actuator")
+smart_plug = SmartPlug("1a66c3d6-22b2-44fe-bf5c-eb5b9d1a8c79", "MysticEnergy Innovations", "FlowState X", "actuator")
+dehumidifier = Dehumidifier("9e5b8274-4e77-4e4e-80d2-b40d648e802a", "ArcaneTech Solutions", "Hydra Dry 8000", "actuator")
+light_bulb = LightBulb("6b1c5f6b-37f6-4e3d-9145-1cfbe2f1fc28", "Elysian Tech", "Lumina Glow 4000", "actuator")
 
 
 ground_floor = DEMO_HOUSE.register_floor(1)
