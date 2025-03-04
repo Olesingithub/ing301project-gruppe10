@@ -35,6 +35,9 @@ class Device:
     def get_device_type(self):
         """Returnerer en beskrivelse av enhetstypen."""
         return self.device_type
+    
+    def get_device_by_id(self):
+        return self.device_id
 
     def __str__(self):
         return f"Device ID: {self.device_id}, Supplier: {self.supplier}, Model: {self.model_name}, Type: {self.get_device_type()}"
