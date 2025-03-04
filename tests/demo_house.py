@@ -1,4 +1,4 @@
-from smarthouse.domain import SmartHouse, Device, TemperatureSensor
+from smarthouse.domain import SmartHouse, Device
 
 DEMO_HOUSE = SmartHouse("Our_House")
 
@@ -29,26 +29,35 @@ second_floor = DEMO_HOUSE.register_floor(2)
 
 #etage 1 
 Garage = DEMO_HOUSE.register_room(ground_floor, 19, "Garage")
-Garage.add_device(automatic_garage_door)  # Guardian Lock 9000
-
+Garage.add_device(automatic_garage_door)
 entrance = DEMO_HOUSE.register_room(ground_floor, 13.5, "Entrance")
-entrance.add_device(smart_lock)          # Guardian Lock 7000
-
+entrance.add_device(smart_lock)
+entrance.add_device(electricity_meter)
 Guest_Room_1 = DEMO_HOUSE.register_room(ground_floor, 8, "Guest_Room_1")
-
+Guest_Room_1.add_device(smart_oven_1)
 Bathroom = DEMO_HOUSE.register_room(ground_floor, 6.3, "Bathroom")
-
+Bathroom.add_device(humidity_sensor)
 LivingRoom_Kitchen = DEMO_HOUSE.register_room(ground_floor, 39.75, "LivingRoom_Kitchen")
-LivingRoom_Kitchen.add_device(heat_pump)    # Thermo Smart 6000
-LivingRoom_Kitchen.add_device(smart_oven_1) # Phennix HEAT 333
+LivingRoom_Kitchen.add_device(motion_sensor)
+LivingRoom_Kitchen.add_device(heat_pump)
+LivingRoom_Kitchen.add_device(co2_sensor)
 
-Office = DEMO_HOUSE.register_room(second_floor, 10, "Office")
-Office.add_device(smart_plug)         # FlowState X
+# etage 2
+Guest_Room_2 = DEMO_HOUSE.register_room(second_floor, 8, "Guest_Room_2")
+Guest_Room_2.add_device(light_bulb)
+Bathroom_2 = DEMO_HOUSE.register_room(second_floor, 9.25, "Bathroom_2")
+Bathroom_2.add_device(dehumidifier)
+Office = DEMO_HOUSE.register_room(second_floor, 11.75, "Office")
+Office.add_device(smart_plug)
+Hallway = DEMO_HOUSE.register_room(second_floor, 10, "Hallway")
+Guest_Room_3 = DEMO_HOUSE.register_room(second_floor, 10, "Guest_Room_3")
+Guest_Room_3.add_device(air_quality_sensor)
+Dressing_room = DEMO_HOUSE.register_room(second_floor, 4, "Dressing_room")
+Master_bedroom = DEMO_HOUSE.register_room(second_floor, 17, "Master_bedroom")
+Master_bedroom.add_device(temperature_sensor)
+Master_bedroom.add_device(smart_oven_2)
 
-Bathroom_2 = DEMO_HOUSE.register_room(second_floor, 5, "Bathroom_2")
-Bathroom_2.add_device(dehumidifier)         # Hydra Dry 8000
 
-MasterBathroom_2 = DEMO_HOUSE.register_room(second_floor, 12, "MasterBathroom_2")
-MasterBathroom_2.add_device(smart_oven_2)          # Ember Heat 3000
-Guest_Room_2 = DEMO_HOUSE.register_room(second_floor, 6, "Guest_Room_2")
-Guest_Room_2.add_device(light_bulb)            # Lumina Glow 4000
+
+
+#print(DEMO_HOUSE)
