@@ -1,63 +1,50 @@
-from smarthouse.domain import SmartHouse, Co2Sensor, ElectricityMeter, MotionSensor, HumiditySensor, TemperatureSensor, AirQualitySensor, SmartLock, HeatPump, SmartOven1, AutomaticGarageDoor, SmartOven2, SmartPlug, Dehumidifier, LightBulb
+from smarthouse.domain import Actuator, Sensor, SmartHouse, ActuatorWithSensor
 
-DEMO_HOUSE = SmartHouse("Our_House")
+DEMO_HOUSE = SmartHouse()
 
 # Building house structure
-# TODO: continue registering the remaining floor, rooms and devices
-
-# Enheter som er sensorer
-co2_sensor = Co2Sensor("8a43b2d7-e8d3-4f3d-b832-7dbf37bf629e", "ElysianTech", "Smoke Warden 1000", "sensor")
-electricity_meter = ElectricityMeter("a2f8690f-2b3a-43cd-90b8-9deea98b42a7", "MysticEnergy Innovations", "Volt Watch Elite", "sensor")
-motion_sensor = MotionSensor("cd5be4e8-0e6b-4cb5-a21f-819d06cf5fc5", "NebulaGuard Innovations", "MoveZ Detect 69", "sensor")
-humidity_sensor = HumiditySensor("3d87e5c0-8716-4b0b-9c67-087eaae07b45", "AetherCorp", "Aqua Alert 800", "sensor")
-temperature_sensor = TemperatureSensor("4d8b1d62-7921-4917-9b70-bbd31ff6e28e", "AetherCorp", "SmartTemp 42", "sensor")
-air_quality_sensor = AirQualitySensor("7c6e35e1-2d8b-4d81-a586-5d01a03bb02c", "CelestialSense Technologies", "AeroGuard Pro", "sensor")
-
-# Enheter som er aktuatorer
-smart_lock = SmartLock("4d5f1ac6-906a-4fd1-b4bf-3a0671e4c4f1", "MythicalTech", "Guardian Lock 7000", "actuator")
-heat_pump = HeatPump("5e13cabc-5c58-4bb3-82a2-3039e4480a6d", "ElysianTech", "Thermo Smart 6000", "actuator")
-smart_oven_1 = SmartOven1("8d4e4c98-21a9-4d1e-bf18-523285ad90f6", "AetherCorp", "Phennix HEAT 333", "actuator")
-automatic_garage_door = AutomaticGarageDoor("9a54c1ec-0cb5-45a7-b20d-2a7349fb132", "MythicalTech", "Guardian Lock 9000", "actuator")
-smart_oven_2 = SmartOven2("c1e8fa9c-4bb8d-487a-a1a5-2b148ee9d2d1", "IgnisTech Solutions", "Ember Heat 3000", "actuator")
-smart_plug = SmartPlug("1a66c3d6-22b2-44fe-bf5c-eb5b9d1a8c79", "MysticEnergy Innovations", "FlowState X", "actuator")
-dehumidifier = Dehumidifier("9e5b8274-4e77-4e4e-80d2-b40d648e802a", "ArcaneTech Solutions", "Hydra Dry 8000", "actuator")
-light_bulb = LightBulb("6b1c5f6b-37f6-4e3d-9145-1cfbe2f1fc28", "Elysian Tech", "Lumina Glow 4000", "actuator")
-
-
 ground_floor = DEMO_HOUSE.register_floor(1)
-second_floor = DEMO_HOUSE.register_floor(2)
-
-#etage 1 
-Garage = DEMO_HOUSE.register_room(ground_floor, 19, "Garage")
-Garage.add_device(automatic_garage_door)
 entrance = DEMO_HOUSE.register_room(ground_floor, 13.5, "Entrance")
-entrance.add_device(smart_lock)
-entrance.add_device(electricity_meter)
-Guest_Room_1 = DEMO_HOUSE.register_room(ground_floor, 8, "Guest_Room_1")
-Guest_Room_1.add_device(smart_oven_1)
-Bathroom = DEMO_HOUSE.register_room(ground_floor, 6.3, "Bathroom")
-Bathroom.add_device(humidity_sensor)
-LivingRoom_Kitchen = DEMO_HOUSE.register_room(ground_floor, 39.75, "LivingRoom_Kitchen")
-LivingRoom_Kitchen.add_device(motion_sensor)
-LivingRoom_Kitchen.add_device(heat_pump)
-LivingRoom_Kitchen.add_device(co2_sensor)
+gr1 = DEMO_HOUSE.register_room(ground_floor, 8, "Guest Room 1")
+bath1 = DEMO_HOUSE.register_room(ground_floor, 6.3, "Bathroom 1")
+stue = DEMO_HOUSE.register_room(ground_floor, 39.75, "Living Room / Kitchen")
+garage = DEMO_HOUSE.register_room(ground_floor, 19, "Garage")
 
-# etage 2
-Guest_Room_2 = DEMO_HOUSE.register_room(second_floor, 8, "Guest_Room_2")
-Guest_Room_2.add_device(light_bulb)
-Bathroom_2 = DEMO_HOUSE.register_room(second_floor, 9.25, "Bathroom_2")
-Bathroom_2.add_device(dehumidifier)
-Office = DEMO_HOUSE.register_room(second_floor, 11.75, "Office")
-Office.add_device(smart_plug)
-Hallway = DEMO_HOUSE.register_room(second_floor, 10, "Hallway")
-Guest_Room_3 = DEMO_HOUSE.register_room(second_floor, 10, "Guest_Room_3")
-Guest_Room_3.add_device(air_quality_sensor)
-Dressing_room = DEMO_HOUSE.register_room(second_floor, 4, "Dressing_room")
-Master_bedroom = DEMO_HOUSE.register_room(second_floor, 17, "Master_bedroom")
-Master_bedroom.add_device(temperature_sensor)
-Master_bedroom.add_device(smart_oven_2)
+first_floor = DEMO_HOUSE.register_floor(2)
+bedroom = DEMO_HOUSE.register_room(first_floor, 17, "Master Bedroom")
+dresser = DEMO_HOUSE.register_room(first_floor, 4, "Dressing Room")
+gr3 = DEMO_HOUSE.register_room(first_floor, 10, "Guest Room 3")
+office = DEMO_HOUSE.register_room(first_floor, 11.75, "Office")
+bath2 = DEMO_HOUSE.register_room(first_floor, 9.25, "Bathroom 2")
+gr2 = DEMO_HOUSE.register_room(first_floor, 8, "Guest Room 2")
+hall = DEMO_HOUSE.register_room(first_floor, 10, "Hallway")
 
+lock = Actuator("4d5f1ac6-906a-4fd1-b4bf-3a0671e4c4f1", "Guardian Lock 7000", "MythicalTech", "Smart Lock")
+co2 = Sensor("8a43b2d7-e8d3-4f3d-b832-7dbf37bf629e", "Smoke Warden 1000", "ElysianTech", "CO2 Sensor", "g/m^2")
+el_meter = Sensor("a2f8690f-2b3a-43cd-90b8-9deea98b42a7", "Volt Watch Elite", "MysticEnergy Innovations", "Electricity Meter", "kWh")
+heat_pump = ActuatorWithSensor("5e13cabc-5c58-4bb3-82a2-3039e4480a6d", "Thermo Smart 6000", "ElysianTech", "Heat Pump")
+motion = Sensor("cd5be4e8-0e6b-4cb5-a21f-819d06cf5fc5", "MoveZ Detect 69", "NebulaGuard Innovations", "Motion Sensor")
+humidity = Sensor("3d87e5c0-8716-4b0b-9c67-087eaaed7b45", "Aqua Alert 800", "AetherCorp", "Humidity Sensor", "%")
+oven = Actuator("8d4e4c98-21a9-4d1e-bf18-523285ad90f6", "Pheonix HEAT 333", "AetherCorp", "Smart Oven")
+garage_door = Actuator("9a54c1ec-0cb5-45a7-b20d-2a7349f1b132", "Guardian Lock 9000", "MythicalTech", "Automatic Garage Door")
+oven_2 = Actuator("c1e8fa9c-4b8d-487a-a1a5-2b148ee9d2d1", "Ember Heat 3000", "IgnisTech Solutions", "Smart Oven")
+temp = Sensor("4d8b1d62-7921-4917-9b70-bbd31f6e2e8e", "SmartTemp 42", "AetherCorp", "Temperature Sensor", "°C")
+air_quality = Sensor("7c6e35e1-2d8b-4d81-a586-5d01a03bb02c", "AeroGuard Pro", "CelestialSense Technologies", "Air Quality Sensor", "g/m^2")
+plug = Actuator("1a66c3d6-22b2-446e-bf5c-eb5b9d1a8c79", "FlowState X", "MysticEnergy Innovations", "Smart Plug")
+dehumid = Actuator("9e5b8274-4e77-4e4e-80d2-b40d648ea02a", "Hydra Dry 8000", "ArcaneTech Solutions", "Dehumidifier")
+bulp = Actuator("6b1c5f6b-37f6-4e3d-9145-1cfbe2f1fc28", "Lumina Glow 4000", "Elysian Tech", "Light Bulp")
 
-
-
-print(DEMO_HOUSE)
+DEMO_HOUSE.register_device(entrance, lock)
+DEMO_HOUSE.register_device(entrance, el_meter)
+DEMO_HOUSE.register_device(stue, co2)
+DEMO_HOUSE.register_device(stue, heat_pump)
+DEMO_HOUSE.register_device(stue, motion)
+DEMO_HOUSE.register_device(bath1, humidity)
+DEMO_HOUSE.register_device(gr1, oven)
+DEMO_HOUSE.register_device(garage, garage_door)
+DEMO_HOUSE.register_device(bedroom, oven_2)
+DEMO_HOUSE.register_device(bedroom, temp)
+DEMO_HOUSE.register_device(gr3, air_quality)
+DEMO_HOUSE.register_device(office, plug)
+DEMO_HOUSE.register_device(bath2, dehumid)
+DEMO_HOUSE.register_device(gr2, bulp)
