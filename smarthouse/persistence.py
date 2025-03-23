@@ -1,5 +1,6 @@
 import sqlite3
 from typing import Optional
+
 from smarthouse.domain import Measurement
 
 class SmartHouseRepository:
@@ -38,7 +39,19 @@ class SmartHouseRepository:
         """
         # TODO: START here! remove the following stub implementation and implement this function 
         #       by retrieving the data from the database via SQL `SELECT` statements.
-        return NotImplemented
+
+        c = self.cursor()
+        c.execute("SELECT * FROM rooms;")
+        get_rooms = c.fetchall()
+        c.execute(""" SELECT area FROM rooms ; """)
+        get_area = c.fetchall
+        c.execute(""" SELECT * FROM devices; """)
+        get_devices = c.fetchall()
+        get_device_by_id = c.execute(""" SELECT d.id FROM devices d""").fetchall()
+        c.close()
+
+
+        return get_rooms, get_area, get_devices, get_device_by_id
 
 
     def get_latest_reading(self, sensor) -> Optional[Measurement]:
@@ -47,7 +60,26 @@ class SmartHouseRepository:
         Returns None if the given object has no sensor readings.
         """
         # TODO: After loading the smarthouse, continue here
-        return NotImplemented
+        m = Measurement()
+        c = self.cursor()
+        query = c.execute("""
+               SELECT *, MAX(m.ts) AS ts
+               FROM devices d, measurements m
+               WHERE d.id = {0};
+               """, sensor.id)
+        if query is not None:
+            row = query.fetchall()
+            m.timestamp = row[7]
+            m.value = row[8]
+            m.unit = row[9]
+            c.close()
+            return m
+        else:
+            m.timestamp = None
+            m.value = None
+            m.unit = None
+            c.close()
+            return None
 
 
     def update_actuator_state(self, actuator):
