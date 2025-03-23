@@ -58,7 +58,56 @@ class SmartHouseRepository:
         #       by creating a new table (`CREATE`), adding some data to it (`INSERT`) first, and then issue
         #       and SQL `UPDATE` statement. Remember also that you will have to call `commit()` on the `Connection`
         #       stored in the `self.conn` instance variable.
-        pass
+
+        if not self.conn:
+            raise ValueError("Database connection is not established.")
+
+        if not hasattr(actuator, 'id') or not hasattr(actuator, 'state'):
+         raise ValueError("The actuator object must have 'id' and 'state' attributes.")
+
+        
+        cursor = self.cursor()
+
+        try:
+            # Opprett tabellen hvis den ikke finnes
+          
+            cursor.execute('''
+             CREATE TABLE IF NOT EXISTS actuators (
+                actuator_id TEXT PRIMARY KEY,
+                state TEXT      
+                )
+            ''')
+
+            # Sjekk om actuatoren allerede finnes i databasen
+            cursor.execute('SELECT state FROM actuators WHERE actuator_id = ?', (actuator.id,))
+            result = cursor.fetchone()
+        
+            if result:
+             # Oppdater tilstanden hvis actuatoren allerede finnes
+                cursor.execute('''
+                   UPDATE actuators
+                   SET state = ?
+                   WHERE actuator_id = ?
+             ''', (actuator.state, actuator.id))
+                
+            else:
+             # Sett inn en ny rad hvis actuatoren ikke finnes
+             cursor.execute('''
+                  INSERT INTO actuators (actuator_id, state)
+                  VALUES (?, ?)
+             ''', (actuator.id, actuator.state))
+        
+            # Commit endringene
+            self.conn.commit()
+    
+        except sqlite3.Error as e:
+            # Håndter eventuelle feil
+            print(f"An error occurred: {e}")
+            self.conn.rollback()
+    
+        finally:
+            # Lukk cursor
+            cursor.close()
 
 
     # statistics
@@ -87,5 +136,43 @@ class SmartHouseRepository:
         The result is a (possibly empty) list of number representing hours [0-23].
         """
         # TODO: implement
-        return NotImplemented
+        cursor = self.cursor() # Bruker cursor() - metoden
+
+        try: # SQL spørringer
+            cursor.execute('''
+                SELECT strftime('%H',timestamp) AS hour, AVG(humidity) AS avg_humidity
+                From measurements
+                WHERE room_id = ? AND date(timestamp) = ?
+                GROUP BY hour              
+                ''',(room.id, date))
+            
+            # Lagrer gjennomsnittlig luftfuktighet per time i dictionary
+            avg_humidity_per_hour = {row[0]: row[1] for row in cursor.fetchall()} 
+
+            # Finner timer med høy luftfuktighet
+            hours_with_high_humidity = []
+
+            for hour, avg_humidity in avg_humidity_per_hour.items():
+                cursor.execute('''
+                    SELECT COUNT(*)
+                    FROM measurements
+                    WHERE room_id = ? AND strftime('%H', timestamp) = ? AND date(timestamp) = ? AND humidity > ?
+                ''', (room.id, hour, date, avg_humidity))
+
+                count = cursor.fetchone()[0]
+                if count > 3:
+                    hours_with_high_humidity.append(int(hour))
+                
+            return hours_with_high_humidity # returnerer resultatet
+        
+        # feilhåndtering
+        except sqlite3.Error as e:
+            print(f"An error occured: {e}")
+            return[]
+        
+        # lukker cursor
+        finally:
+            cursor.close() #Lukk cursoren manuelt
+
+
 
