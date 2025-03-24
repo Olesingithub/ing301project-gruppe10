@@ -39,15 +39,13 @@ class SmartHouseRepository:
         """
         # TODO: START here! remove the following stub implementation and implement this function 
         #       by retrieving the data from the database via SQL `SELECT` statements.
-        c = self.cursor()
-        c.execute("SELECT * FROM rooms;")
-        get_rooms = c.fetchall()
-        c.execute(""" SELECT SUM(area) FROM rooms ; """)
-        get_area = c.fetchone()
-        c.execute(""" SELECT * FROM devices; """)
-        get_devices = c.fetchall()
-        c.execute(""" SELECT d.id FROM devices d WHERE d.id = ?""", str)
-        get_device_by_id = c.fetchall()
+        c = self.conn.cursor()
+        id = input()
+        get_rooms = c.execute("SELECT * FROM rooms;").fetchall()
+        get_area = c.execute(" SELECT SUM(area) FROM rooms; ").fetchone()
+        get_devices = c.execute(" SELECT * FROM devices; ").fetchall()
+        get_device_by_id =  c.execute(" SELECT d.id FROM devices d WHERE d.id = ?;", (id,)).fetchall()
+
         c.close()
 
         return get_rooms, get_area, get_devices, get_device_by_id
@@ -62,12 +60,12 @@ class SmartHouseRepository:
         m = Measurement()
         c = self.cursor()
 
-        if sensor.id is not None:
+        if sensor is not None:
             query = c.execute("""
                    SELECT *, MAX(m.ts) AS ts
-                   FROM devices d, measurements m
-                   WHERE d.id = ?;
-                   """, sensor.id)
+                   FROM measurements m
+                   inner JOIN devices d ON d.id = sensor;
+                   """, sensor)
 
             row = query.fetchall()
             m.timestamp = row[7]
@@ -159,7 +157,8 @@ class SmartHouseRepository:
         # TODO: This and the following statistic method are a bit more challenging. Try to design the respective 
         #       SQL statements first in a SQL editor like Dbeaver and then copy it over here.  
         return NotImplemented
-
+        c = self.cursor()
+        c.execute("""SELECT timediff(end_ts, start_ts) FROM measurements; """)
     
     def calc_hours_with_humidity_above(self, room, date: str) -> list:
         """
