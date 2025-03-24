@@ -39,17 +39,16 @@ class SmartHouseRepository:
         """
         # TODO: START here! remove the following stub implementation and implement this function 
         #       by retrieving the data from the database via SQL `SELECT` statements.
-
         c = self.cursor()
         c.execute("SELECT * FROM rooms;")
         get_rooms = c.fetchall()
-        c.execute(""" SELECT area FROM rooms ; """)
-        get_area = c.fetchall
+        c.execute(""" SELECT SUM(area) FROM rooms ; """)
+        get_area = c.fetchone()
         c.execute(""" SELECT * FROM devices; """)
         get_devices = c.fetchall()
-        get_device_by_id = c.execute(""" SELECT d.id FROM devices d""").fetchall()
+        c.execute(""" SELECT d.id FROM devices d WHERE d.id = ?""", str)
+        get_device_by_id = c.fetchall()
         c.close()
-
 
         return get_rooms, get_area, get_devices, get_device_by_id
 
@@ -62,12 +61,14 @@ class SmartHouseRepository:
         # TODO: After loading the smarthouse, continue here
         m = Measurement()
         c = self.cursor()
-        query = c.execute("""
-               SELECT *, MAX(m.ts) AS ts
-               FROM devices d, measurements m
-               WHERE d.id = {0};
-               """, sensor.id)
-        if query is not None:
+
+        if sensor.id is not None:
+            query = c.execute("""
+                   SELECT *, MAX(m.ts) AS ts
+                   FROM devices d, measurements m
+                   WHERE d.id = ?;
+                   """, sensor.id)
+
             row = query.fetchall()
             m.timestamp = row[7]
             m.value = row[8]
