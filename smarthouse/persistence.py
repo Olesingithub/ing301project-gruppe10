@@ -30,6 +30,7 @@ class SmartHouseRepository:
         self.conn = sqlite3.connect(self.file)
 
     
+    @property
     def load_smarthouse_deep(self):
         """
         This method retrives the complete single instance of the _SmartHouse_ 
@@ -40,11 +41,15 @@ class SmartHouseRepository:
         # TODO: START here! remove the following stub implementation and implement this function 
         #       by retrieving the data from the database via SQL `SELECT` statements.
         c = self.conn.cursor()
-        id = input()
-        get_rooms = c.execute("SELECT * FROM rooms;").fetchall()
-        get_area = c.execute(" SELECT SUM(area) FROM rooms; ").fetchone()
-        get_devices = c.execute(" SELECT * FROM devices; ").fetchall()
-        get_device_by_id =  c.execute(" SELECT d.id FROM devices d WHERE d.id = ?;", (id,)).fetchall()
+
+        c.execute("SELECT * FROM rooms GROUP BY id;")
+        get_rooms = []
+        for row in c.fetchall():
+            get_rooms.append(Rooms(row[0], row[1]))
+        return result
+        get_area = c.execute(" SELECT SUM(area) FROM rooms; ").fetchone()[0]
+        get_devices = c.execute(" SELECT * FROM devices GROUP BY id; ").fetchall()
+        get_device_by_id =  c.execute(" SELECT * FROM devices  WHERE id = ?;", (input())).fetchall()
 
         c.close()
 
@@ -58,14 +63,13 @@ class SmartHouseRepository:
         """
         # TODO: After loading the smarthouse, continue here
         m = Measurement()
-        c = self.cursor()
-
         if sensor is not None:
+            c = self.cursor()
             query = c.execute("""
                    SELECT *, MAX(m.ts) AS ts
-                   FROM measurements m
-                   inner JOIN devices d ON d.id = sensor;
-                   """, sensor)
+                   FROM devices d, measurements m
+                   WHERE d.id = ?;
+                   """, sensor.id).fetchone()
 
             row = query.fetchall()
             m.timestamp = row[7]
@@ -77,8 +81,8 @@ class SmartHouseRepository:
             m.timestamp = None
             m.value = None
             m.unit = None
-            c.close()
-            return None
+
+            return m
 
 
     def update_actuator_state(self, actuator):
