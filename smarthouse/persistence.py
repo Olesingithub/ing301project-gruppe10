@@ -42,11 +42,8 @@ class SmartHouseRepository:
         #       by retrieving the data from the database via SQL `SELECT` statements.
         c = self.conn.cursor()
 
-        c.execute("SELECT * FROM rooms GROUP BY id;")
-        get_rooms = []
-        for row in c.fetchall():
-            get_rooms.append(Rooms(row[0], row[1]))
-        return result
+
+        get_rooms = c.execute("SELECT * FROM rooms GROUP BY id;").fetchall()
         get_area = c.execute(" SELECT SUM(area) FROM rooms; ").fetchone()[0]
         get_devices = c.execute(" SELECT * FROM devices GROUP BY id; ").fetchall()
         get_device_by_id =  c.execute(" SELECT * FROM devices  WHERE id = ?;", (input())).fetchall()
