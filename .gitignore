@@ -127,8 +127,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# PyCharm
-.idea
-smarthouse/persistence – Kopi.py
-smarthouse/persistence- kopi2.py
+.DS_Store
