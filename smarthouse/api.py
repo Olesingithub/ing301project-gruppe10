@@ -54,6 +54,20 @@ def get_smarthouse_info() -> dict[str, int | float]:
 # https://github.com/selabhvl/ing301-projectpartC-startcode?tab=readme-ov-file#oppgavebeskrivelse
 # here ...
 
+@app.get("/smarthouse/floor",response_model= list[dict[str, int | float]])
+def get_smarthouse_info() -> list[dict[str, int | float]]:
+    """
+    This endpoint returns information about all floors in the smarthouse
+    """
+    return [ 
+        {
+        "floor_id": floor.level,
+        "no_floors": len(floor.rooms), # Bruker direkte  tilgang til listen
+        }
+        for floor in smarthouse.get_floors()
+    ]
+       
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8000)
