@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from smarthouse.persistence import SmartHouseRepository
 from pathlib import Path
+from fastapi import HTTPException
 import os
 def setup_database():
     project_dir = Path(__file__).parent.parent
@@ -54,7 +55,7 @@ def get_smarthouse_info() -> dict[str, int | float]:
 # https://github.com/selabhvl/ing301-projectpartC-startcode?tab=readme-ov-file#oppgavebeskrivelse
 # here ...
 
-@app.get("/smarthouse/floor",response_model= list[dict[str, int | float]])
+@app.get("/smarthouse/floor")
 def get_smarthouse_info() -> list[dict[str, int | float]]:
     """
     This endpoint returns information about all floors in the smarthouse
@@ -62,14 +63,59 @@ def get_smarthouse_info() -> list[dict[str, int | float]]:
     return [ 
         {
         "floor_id": floor.level,
-        "no_floors": len(floor.rooms), # Bruker direkte  tilgang til listen
+        "no_rooms": len(floor.rooms), # Bruker direkte  tilgang til listen
+        "area": sum(room.room_size for room in floor.rooms)
         }
         for floor in smarthouse.get_floors()
     ]
-       
+    
+@app.get("/smarthouse/floor/{fid}")
+def get_smarthouse_info(fid: int):  # <-- Dette er viktig!
+    """
+    This endpoint returns information about spesific floor selected
+    """
+    floor = next((f for f in smarthouse.get_floors() if f.level == fid), None)
+  
+    if floor is None:
+        return HTTPException(status_code=404, detail = "Floor not found")
+    
+    return {
+        "floor_id": floor.level,
+        "no_rooms": len(floor.rooms), # Bruker direkte  tilgang til listen
+        "area": sum(room.room_size for room in floor.rooms)
+    }
 
+
+
+@app.get("/smarthouse/floor/{fid}/room")
+def get_smarthouse_info(fid: int):
+    """
+    This endpoint returns information about all floors in the smarthouse
+    """
+    floor = next((f for f in smarthouse.get_floors() if f.level == fid), None)
+  
+    if floor is None:
+        return HTTPException(status_code=404, detail = "Floor not found")
+    
+    return [ 
+    {
+        "floor_id": floor.level,
+        "room_name": room.room_name,
+        "area": room.room_size,
+        "devices": [
+            {
+                "id": device.id,
+                "model_name": device.model_name,
+                "supplier": device.supplier,
+                "device_type": device.device_type,
+            }
+            for device in room.devices
+        ]
+    }
+    for room in floor.rooms
+]
+
+    
 
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8000)
-
-
