@@ -24,7 +24,7 @@ class SmartHouseRepository:
         you are done with issuing SQL commands.
         """
         return self.conn.cursor()
-
+    
     def reconnect(self):
         """
         Closes the current connection towards the database and opens a fresh one.
@@ -126,6 +126,29 @@ WHERE device = '{actuator.id}';
             c.execute(query)
             self.conn.commit()
             c.close()
+            
+    def update_room_name(self, room: Room, new_name: str) -> None: 
+        #denne for å endre navn på Living Room / Kitchen til Livingroom and kitchen
+        """
+        Oppdaterer navnet på et gitt rom i databasen.
+        Fjerner også spesialtegn som skråstrek (/) fra navnet.
+         """
+        if isinstance(room, Room) and room.db_id is not None:
+            # Fjern skråstrek og andre spesialtegn fra det nye navnet
+            sanitized_name = new_name.replace("/", "").strip()
+
+            query = """
+            UPDATE rooms
+            SET name = ?
+            WHERE id = ?;
+            """
+            cursor = self.cursor()
+            cursor.execute(query, (sanitized_name, room.db_id))
+            self.conn.commit()
+            cursor.close()
+
+            # Oppdater også navnet i Room-objektet
+            room.room_name = sanitized_name
 
     # statistics
 

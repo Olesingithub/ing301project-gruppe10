@@ -6,6 +6,8 @@ from smarthouse.persistence import SmartHouseRepository
 from pathlib import Path
 from fastapi import HTTPException
 import os
+from urllib.parse import unquote  # Add this import
+
 def setup_database():
     project_dir = Path(__file__).parent.parent
     db_file = project_dir / "data" / "db.sql" # you have to adjust this if you have changed the file name of the database
@@ -90,12 +92,13 @@ def get_smarthouse_info(fid: int):  # <-- Dette er viktig!
 @app.get("/smarthouse/floor/{fid}/room")
 def get_smarthouse_info(fid: int):
     """
-    This endpoint returns information about all floors in the smarthouse
+    This endpoint returns information about spesific floors, and rooms in them
     """
     floor = next((f for f in smarthouse.get_floors() if f.level == fid), None)
   
     if floor is None:
         return HTTPException(status_code=404, detail = "Floor not found")
+    
     
     return [ 
     {
@@ -114,6 +117,37 @@ def get_smarthouse_info(fid: int):
     }
     for room in floor.rooms
 ]
+    
+@app.get("/smarthouse/floor/{fid}/room/{rid}")
+def get_smarthouse_info(fid: int, rid: str = None):
+    """
+    This endpoint returns information about specific floors and specific rooms in them
+    """
+    floor = next((f for f in smarthouse.get_floors() if f.level == fid), None)
+
+    if floor is None:
+        return HTTPException(status_code=404, detail="Floor not found")
+    
+    room = next((r for r in floor.rooms if r.room_name.lower() == rid.lower()), None)
+
+    if room is None:
+        return HTTPException(status_code=404, detail="Room not found in this floor")
+     
+    return {
+        "floor_id": floor.level,
+        "room_name": room.room_name,
+        "area": room.room_size,
+        "devices": [
+            {
+                "id": device.id,
+                "model_name": device.model_name,
+                "supplier": device.supplier,
+                "device_type": device.device_type,
+            }
+            for device in room.devices
+        ]
+    }
+   
 
     
 
