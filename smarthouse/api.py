@@ -147,6 +147,24 @@ def get_smarthouse_info(fid: int, rid: str = None):
             for device in room.devices
         ]
     }
+    
+@app.get("/smarthouse/device")
+def get_device_info():
+    """
+    This endpoint returns information about all devices in the smarthouse
+    """
+    return [
+        {
+            "id": device.id,
+            "model_name": device.model_name,
+            "supplier": device.supplier,
+            "device_type": device.device_type,
+            "room_name": device.room.room_name if device.room and device.room.room_name else "Unknown",
+            "floor_id": device.room.floor.level if device.room and device.room.floor else "Unknown",
+        }   
+        
+        for device in smarthouse.get_devices()
+    ]
    
 
     
