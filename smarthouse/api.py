@@ -190,7 +190,7 @@ def get_device_info(uuid: str):
         "floor_id": device.room.floor.level if device.room and device.room.floor else "Unknown",
     }
     
-#Sensor Root   
+#Sensor Roots   
 
 
 @app.get("/smarthouse/sensor/{uuid}/current")
@@ -221,6 +221,62 @@ def get_current_sensor_measurement(uuid: str):
         },
         "room_name": sensor.room.room_name if sensor.room and sensor.room.room_name else "Unknown",
         "floor_id": sensor.room.floor.level if sensor.room and sensor.room.floor else "Unknown",
+    }
+    
+
+# Actuator Roots   
+
+@app.get("/smarthouse/actuator/{uuid}/current")
+def get_current_actuator_state(uuid: str):
+    """
+    This endpoint returns the current state for a specific actuator identified by its UUID.
+    """
+    # Finn actuatoren basert på UUID
+    actuator = next((d for d in smarthouse.get_devices() if isinstance(d, Actuator) and d.id == uuid), None)
+
+    if actuator is None:
+        raise HTTPException(status_code=404, detail="Actuator not found")
+
+    # Hent nåværende tilstand fra actuatoren
+    current_state = actuator.state  # Bruker state-attributtet direkte
+
+    # Returner informasjon om actuatoren og dens nåværende tilstand
+    return {
+        "id": actuator.id,
+        "model_name": actuator.model_name,
+        "supplier": actuator.supplier,
+        "device_type": actuator.device_type,
+        "state": current_state,
+        "room_name": actuator.room.room_name if actuator.room and actuator.room.room_name else "Unknown",
+        "floor_id": actuator.room.floor.level if actuator.room and actuator.room.floor else "Unknown",
+    }
+
+@app.put("/smarthouse/device/{uuid}")
+def put_actuator_state(uuid: str, new_state: dict):
+    """
+    This endpoint updates the current state for a specific actuator identified by its UUID.
+    """
+    # Finn actuatoren basert på UUID
+    actuator = next((d for d in smarthouse.get_devices() if isinstance(d, Actuator) and d.id == uuid), None)
+
+    if actuator is None:
+        raise HTTPException(status_code=404, detail="Actuator not found")
+
+    # Oppdater tilstanden til actuatoren
+    if "state" not in new_state:
+        raise HTTPException(status_code=400, detail="Missing 'state' in request body")
+
+    actuator.state = new_state["state"]
+
+    # Returner bekreftelse på oppdatering
+    return {
+        "id": actuator.id,
+        "model_name": actuator.model_name,
+        "supplier": actuator.supplier,
+        "device_type": actuator.device_type,
+        "state": actuator.state,
+        "room_name": actuator.room.room_name if actuator.room and actuator.room.room_name else "Unknown",
+        "floor_id": actuator.room.floor.level if actuator.room and actuator.room.floor else "Unknown",
     }
 
 if __name__ == '__main__':

@@ -1,0 +1,17 @@
+meta {
+  name: Put acuator state
+  type: http
+  seq: 10
+}
+
+put {
+  url: http://127.0.0.1:8000/smarthouse/actuator/4d5f1ac6-906a-4fd1-b4bf-3a0671e4c4f1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "state": "Unlocked"
+  }
+}
