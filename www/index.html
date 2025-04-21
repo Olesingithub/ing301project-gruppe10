@@ -72,6 +72,14 @@
         </div>
     </div>
 
+     <!-- Section to view actuator data -->
+     <div class="container">
+        <h2>Get Actuator Data</h2>
+        <input type="text" id="actuator-data-uuid" class="input-field" placeholder="Enter Actuator UUID">
+        <button class="button" onclick="fetchActuatorData()">Get Actuator Data</button>
+        <div id="actuator-data" class="output"></div>
+    </div>
+
     <!-- Section to view and update actuator state -->
     <div class="container">
         <h2>Update Actuator State</h2>
@@ -81,13 +89,7 @@
         <div id="actuator-response" class="output"></div>
     </div>
 
-    <!-- Section to view actuator data -->
-    <div class="container">
-        <h2>Get Actuator Data</h2>
-        <input type="text" id="actuator-data-uuid" class="input-field" placeholder="Enter Actuator UUID">
-        <button class="button" onclick="fetchActuatorData()">Get Actuator Data</button>
-        <div id="actuator-data" class="output"></div>
-    </div>
+   
 
     <!-- Section to view sensor data -->
     <div class="container">
