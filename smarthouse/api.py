@@ -164,6 +164,8 @@ def get_device_info():
             "device_type": device.device_type,
             "room_name": device.room.room_name if device.room and device.room.room_name else "Unknown",
             "floor_id": device.room.floor.level if device.room and device.room.floor else "Unknown",
+            "is_sensor": isinstance(device, Sensor),
+            "is_actuator": isinstance(device, Actuator)
         }   
         
         for device in smarthouse.get_devices()

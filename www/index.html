@@ -1,28 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartHouse Cloud Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .input-field {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .image-container {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 50%;
+            height: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    
 
- <html>
-        <head>
-            <title>SmartHouse Cloud Service</title>
-        </head>
-        <body>
-            <h1>Welcome to SmartHouse Cloud Service</h1>
+    <h1>Welcome to SmartHouse Cloud Service</h1>
+    <!-- Image Section -->
+    <div class="image-container">
+        <img src="smarthouse.png" alt="SmartHouse" />
+    </div>
+    <p>Interact with the SmartHouse API below:</p>
 
-            <p>
-                <img src="smarthouse.png" alt="SmartHouse" width="500">
-            </p>
-            <p>This is a placeholder. If you feel like an extra challenge you may 
-                want to implement a fully fledged web application that uses the REST API 
-                that you just have developed. Most modern web applications combine HTML, CSS 
-                and JavaScript to create something called a <em>Single Page Application (SPA)</em>.
-                JavaScript is in some sense similar to Python in the sense that it is also 
-                a dynamically typed and interpreted language. A good starting point for learning 
-                JavaScript and Web Development in general are the <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript">Mozilla Developer Guides</a>. Additionally, people often use some kind of
-                a framwork to set up their application. Some popular examples are:</p>
-         <ul>
-             <li><a href="https://angular.io/">Anular</a></li>
-             <li><a href="https://react.dev/">React</a></li>
-             <li><a href="https://vuejs.org/">Vue.js</a></li>
-             <li><a href="https://svelte.dev/">Svelte</a></li>
-         </ul>
-         <p>Or you may use a traditional backend-driven rendering mechanism by leveraging <a href="https://fastapi.tiangolo.com/advanced/custom-response/#htmlresponse">FastAPI's <code>HTMLResponse</code></a> and <a href="https://htmx.org/">htmx</a>.</p>
-        </body>
- </html>
+    <!-- Section to view general SmartHouse info -->
+    <div class="container">
+        <h2>SmartHouse Info</h2>
+        <button class="button" onclick="fetchSmartHouseInfo()">Get SmartHouse Info</button>
+        <div id="smarthouse-info" class="output">
+            <h3>Sensors</h3>
+            <div id="sensor-list"></div>
+            <h3>Actuators</h3>
+            <div id="actuator-list"></div>
+            <h3>Actuator + Sensor</h3>
+            <div id="actuator-with-sensor-list"></div>
+        </div>
+    </div>
+
+    <!-- Section to view and update actuator state -->
+    <div class="container">
+        <h2>Update Actuator State</h2>
+        <input type="text" id="actuator-uuid" class="input-field" placeholder="Enter Actuator UUID">
+        <input type="text" id="new-state" class="input-field" placeholder="Enter New State">
+        <button class="button" onclick="updateActuatorState()">Update State</button>
+        <div id="actuator-response" class="output"></div>
+    </div>
+
+    <!-- Section to view actuator data -->
+    <div class="container">
+        <h2>Get Actuator Data</h2>
+        <input type="text" id="actuator-data-uuid" class="input-field" placeholder="Enter Actuator UUID">
+        <button class="button" onclick="fetchActuatorData()">Get Actuator Data</button>
+        <div id="actuator-data" class="output"></div>
+    </div>
+
+    <!-- Section to view sensor data -->
+    <div class="container">
+        <h2>Get Sensor Data</h2>
+        <input type="text" id="sensor-uuid" class="input-field" placeholder="Enter Sensor UUID">
+        <button class="button" onclick="fetchSensorData()">Get Sensor Data</button>
+        <div id="sensor-data" class="output"></div>
+    </div>
+
+    <script>
+        const apiBaseUrl = "http://127.0.0.1:8000";
+
+        // Fetch general SmartHouse info
+        function fetchSmartHouseInfo() {
+            fetch(`${apiBaseUrl}/smarthouse/device`)
+                .then(response => response.json())
+                .then(data => {
+                    // Separate sensors, actuators, and ActuatorWithSensor
+                    const sensors = data.filter(device => device.is_sensor && !device.is_actuator);
+                    const actuators = data.filter(device => device.is_actuator && !device.is_sensor);
+                    const actuatorWithSensors = data.filter(device => device.is_sensor && device.is_actuator);
+
+                    // Format sensors
+                    const sensorList = sensors.map(sensor => 
+                        `Name: ${sensor.model_name}, UUID: ${sensor.id}`
+                    ).join('<br>');
+
+                    // Format actuators
+                    const actuatorList = actuators.map(actuator => 
+                        `Name: ${actuator.model_name}, UUID: ${actuator.id}`
+                    ).join('<br>');
+
+                    // Format ActuatorWithSensor
+                    const actuatorWithSensorList = actuatorWithSensors.map(device => 
+                        `Name: ${device.model_name}, UUID: ${device.id} (Actuator + Sensor)`
+                    ).join('<br>');
+
+                    // Display sensors, actuators, and ActuatorWithSensor
+                    document.getElementById("sensor-list").innerHTML = sensorList || "No sensors found.";
+                    document.getElementById("actuator-list").innerHTML = actuatorList || "No actuators found.";
+                    document.getElementById("actuator-with-sensor-list").innerHTML = actuatorWithSensorList || "No ActuatorWithSensor found.";
+                })
+                .catch(error => {
+                    document.getElementById("smarthouse-info").innerText = "Error fetching SmartHouse info.";
+                    console.error(error);
+                });
+        }
+
+        // Update actuator state
+        function updateActuatorState() {
+            const uuid = document.getElementById("actuator-uuid").value;
+            const newState = document.getElementById("new-state").value;
+
+            if (!uuid || !newState) {
+                alert("Please enter both Actuator UUID and New State.");
+                return;
+            }
+
+            fetch(`${apiBaseUrl}/smarthouse/device/${uuid}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ state: newState })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("actuator-response").innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById("actuator-response").innerText = "Error updating actuator state.";
+                    console.error(error);
+                });
+        }
+
+        // Fetch actuator data
+        function fetchActuatorData() {
+            const uuid = document.getElementById("actuator-data-uuid").value;
+
+            if (!uuid) {
+                alert("Please enter Actuator UUID.");
+                return;
+            }
+
+            fetch(`${apiBaseUrl}/smarthouse/actuator/${uuid}/current`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("actuator-data").innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById("actuator-data").innerText = "Error fetching actuator data.";
+                    console.error(error);
+                });
+        }
+
+        // Fetch sensor data
+        function fetchSensorData() {
+            const uuid = document.getElementById("sensor-uuid").value;
+
+            if (!uuid) {
+                alert("Please enter Sensor UUID.");
+                return;
+            }
+
+            fetch(`${apiBaseUrl}/smarthouse/sensor/${uuid}/current`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("sensor-data").innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById("sensor-data").innerText = "Error fetching sensor data.";
+                    console.error(error);
+                });
+        }
+    </script>
+</body>
+</html>
