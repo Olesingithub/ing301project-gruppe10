@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from smarthouse.persistence import SmartHouseRepository
+from smarthouse.domain import Sensor, Actuator,ActuatorWithSensor
 from pathlib import Path
 from fastapi import HTTPException
 import os
@@ -147,6 +148,8 @@ def get_smarthouse_info(fid: int, rid: str = None):
             for device in room.devices
         ]
     }
+
+#Devices Root   
     
 @app.get("/smarthouse/device")
 def get_device_info():
@@ -165,9 +168,60 @@ def get_device_info():
         
         for device in smarthouse.get_devices()
     ]
-   
-
     
+@app.get("/smarthouse/device/{uuid}")
+def get_device_info(uuid: str):
+    """
+    This endpoint returns information about a specific device identified by its UUID.
+    """
+    # Hent enheten basert på UUID
+    device = next((d for d in smarthouse.get_devices() if d.id == uuid), None)
+  
+    if device is None:
+        raise HTTPException(status_code=404, detail="Device not found")
+    
+    # Returner informasjon om enheten
+    return {
+        "id": device.id,
+        "model_name": device.model_name,
+        "supplier": device.supplier,
+        "device_type": device.device_type,
+        "room_name": device.room.room_name if device.room and device.room.room_name else "Unknown",
+        "floor_id": device.room.floor.level if device.room and device.room.floor else "Unknown",
+    }
+    
+#Sensor Root   
+
+
+@app.get("/smarthouse/sensor/{uuid}/current")
+def get_current_sensor_measurement(uuid: str):
+    """
+    This endpoint returns the latest measurement for a specific sensor identified by its UUID.
+    """
+    # Finn sensoren basert på UUID
+    sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
+
+    if sensor is None:
+        raise HTTPException(status_code=404, detail="Sensor not found")
+
+    # Hent siste måling fra sensoren
+    latest_measurement = sensor.last_measurement()
+
+    # Returner informasjon om sensoren og siste måling
+    return {
+        "id": sensor.id,
+        "model_name": sensor.model_name,
+        "supplier": sensor.supplier,
+        "device_type": sensor.device_type,
+        "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
+        "last_measurement": {
+            "timestamp": latest_measurement.timestamp,
+            "value": latest_measurement.value,
+            "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
+        },
+        "room_name": sensor.room.room_name if sensor.room and sensor.room.room_name else "Unknown",
+        "floor_id": sensor.room.floor.level if sensor.room and sensor.room.floor else "Unknown",
+    }
 
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8000)
