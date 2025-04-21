@@ -1,3 +1,4 @@
+from typing import Optional
 import uvicorn
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -164,8 +165,7 @@ def get_device_info():
             "device_type": device.device_type,
             "room_name": device.room.room_name if device.room and device.room.room_name else "Unknown",
             "floor_id": device.room.floor.level if device.room and device.room.floor else "Unknown",
-            "is_sensor": isinstance(device, Sensor),
-            "is_actuator": isinstance(device, Actuator)
+            
         }   
         
         for device in smarthouse.get_devices()
@@ -191,10 +191,57 @@ def get_device_info(uuid: str):
         "room_name": device.room.room_name if device.room and device.room.room_name else "Unknown",
         "floor_id": device.room.floor.level if device.room and device.room.floor else "Unknown",
     }
+# her skal POST smarthouse/sensor
+
+@app.get("/smarthouse/sensor/{uuid}/values")
+def get_sensor_values(uuid: str, limit: Optional[int] = None) -> list[dict]:
+    """
+    Returns up to the last limit measurements for sensor uuid,
+    or all measurements if limit is omitted.
+    """
+    # 1 Slå opp device og utfør typesjekk.
+    sensor = smarthouse.get_device_by_uuid(uuid)
+    if not (sensor and sensor.is_sensor()):
+        raise HTTPException(status_code=404, detail="Sensor not found")  # :contentReference[oaicite:0]{index=0}
+
+    # 2 Hent målinger fra domain.
+    vals = sensor.get_measurements(limit)  # Optional query param :contentReference[oaicite:1]{index=1}
+
+    # 3 Serialiser til JSON.
+
+    return [
+        {"timestamp": m.timestamp, "value": m.value, "unit": m.unit}
+        for m in vals
+    ]
+
+@app.delete("/smarthouse/sensor/{uuid}/oldest")
+def delete_oldest_sensor_value(uuid: str) -> dict:
+    """
+    Deletes and returns the oldest measurement for sensor uuid.
+    """
+    # 1) Slå opp device
+    sensor = smarthouse.get_device_by_uuid(uuid)
+    if not (sensor and sensor.is_sensor()):
+        raise HTTPException(status_code=404, detail="Sensor not found")  # :contentReference[oaicite:5]{index=5}
+
+    # 2) Domain‑level deletion
+    deleted = sensor.delete_oldest()
+    if not deleted:
+        raise HTTPException(status_code=404, detail="No measurements to delete")
+
+    # 3) (Valgfritt) persist removal:
+    repo.delete_oldest_sensor_measurement(uuid)  # see persistence implementation
+
+    # 4) Return the deleted measurement
+    return {
+        "timestamp": deleted.timestamp,
+        "value": deleted.value,
+        "unit": deleted.unit
+    }
+    
+    
     
 #Sensor Roots   
-
-
 @app.get("/smarthouse/sensor/{uuid}/current")
 def get_current_sensor_measurement(uuid: str):
     """
