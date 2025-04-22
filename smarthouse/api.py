@@ -11,7 +11,7 @@ import os
 from urllib.parse import unquote  # Add this import
 
 def setup_database():
-    project_dir = Path(__file__).parent.parent
+    project_dir = Path(_file_).parent.parent
     db_file = project_dir / "data" / "db.sql" # you have to adjust this if you have changed the file name of the database
     return SmartHouseRepository(str(db_file.absolute()))
 
@@ -278,54 +278,51 @@ def get_current_sensor_measurement(uuid: str):
     This endpoint returns the latest measurement for a specific sensor identified by its UUID.
     """
     # Finn sensoren basert på UUID
-    sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
-    #sensor = smarthouse.get_device_by_id(None, uuid)
-
-    if (sensor is None) or (Sensor.is_sensor(sensor) is False):
+    #sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
+    sensor = smarthouse.get_device_by_id(uuid)
+    if not sensor or (Sensor.is_sensor(sensor) is False):
+    #if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
 
     # Hent siste måling fra sensoren
-    latest_measurement = SmartHouseRepository.get_latest_reading(sensor, uuid)
+    latest_measurement = SmartHouseRepository.get_latest_reading(None, sensor=sensor.id)
 
-    print(f"Requested last measurement by {sensor.id}:")
-
+    #print(f"Requested last measurement by {sensor.id}:")
 
     # Returner informasjon om sensoren og siste måling
-    return {
-        "timestamp": {latest_measurement.timestamp},
-        "value": {latest_measurement.value},
-        "unit": latest_measurement.unit}
-
-    """
     return {
         "id": sensor.id,
         "model_name": sensor.model_name,
         "supplier": sensor.supplier,
         "device_type": sensor.device_type,
-        "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
+        "unit": latest_measurement.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
         "last_measurement": {
             "timestamp": latest_measurement.timestamp,
             "value": latest_measurement.value,
-            "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
+            "unit": latest_measurement.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
         },
         "room_name": sensor.room.room_name if sensor.room and sensor.room.room_name else "Unknown",
         "floor_id": sensor.room.floor.level if sensor.room and sensor.room.floor else "Unknown",
     } 
-    """
+
 
 @app.post("/smarthouse/sensor/{uuid}/current", status_code=201)
-def create_current_sensor_measurement(uuid: str, m:Sensor.last_measurement()):
-    sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
-    #sensor = smarthouse.get_device_by_id(uuid)
+def create_current_sensor_measurement(uuid: str):
+    #sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
+    sensor = smarthouse.get_device_by_id(uuid)
 
-    if (sensor is None) or (Sensor.is_sensor(sensor) is False):
+    if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
 
-    m(sensor)
+    added_measurement = Sensor.last_measurement(sensor)
+    unit = sensor.unit
     return {
-        "timestamp": m.timestamp,
-        "value": m.value,
-        "unit": m.unit}
+        "new_measurement": {
+                                "timestamp": added_measurement.timestamp,
+                                "value": added_measurement.value,
+                                "unit": unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
+                                }
+    }
 
     
 
@@ -384,5 +381,5 @@ def put_actuator_state(uuid: str, new_state: dict):
         "floor_id": actuator.room.floor.level if actuator.room and actuator.room.floor else "Unknown",
     }
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     uvicorn.run(app, host="127.0.0.1", port=8000)
