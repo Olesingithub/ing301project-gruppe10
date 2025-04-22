@@ -274,6 +274,7 @@ def get_current_sensor_measurement(uuid: str):
         "floor_id": sensor.room.floor.level if sensor.room and sensor.room.floor else "Unknown",
     }"""
 
+
 @app.get("/smarthouse/sensor/{uuid}/current")
 def get_current_sensor_measurement(uuid: str):
     """
@@ -281,15 +282,12 @@ def get_current_sensor_measurement(uuid: str):
     """
     # Finn sensoren basert på UUID
     sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
-    #sensor = smarthouse.get_device_by_id(uuid)
-    #if not sensor or (Sensor.is_sensor(sensor) is False):
+
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
 
     # Hent siste måling fra sensoren
     latest_measurement = SmartHouseRepository.get_latest_reading(smarthouse, sensor)
-
-    #print(f"Requested last measurement by {sensor.id}:")
 
     # Returner informasjon om sensoren og siste måling
     return {
@@ -311,40 +309,21 @@ def get_current_sensor_measurement(uuid: str):
 @app.post("/smarthouse/sensor/{uuid}/current", status_code=201)
 def create_current_sensor_measurement(uuid: str):
     sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
-    #sensor = smarthouse.get_device_by_id(uuid)
 
     if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
 
-    added_measurement = Sensor.last_measurement(sensor)
+    added_measurement = sensor.last_measurement()
     return {
         "new_measurement": {
-                                "timestamp": added_measurement.timestamp,
-                                "value": added_measurement.value,
-                                "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
-                                }
+            "timestamp": added_measurement.timestamp,
+            "value": added_measurement.value,
+            "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
+        }
     }
 
-@app.post("/smarthouse/sensor/{uuid}/current", status_code=201)
-def create_current_sensor_measurement(uuid: str):
-    #sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
-    sensor = smarthouse.get_device_by_id(uuid)
 
-    if sensor is None:
-        raise HTTPException(status_code=404, detail="Sensor not found")
-
-    added_measurement = Sensor.last_measurement(sensor)
-    return {
-        "new_measurement": {
-                                "timestamp": added_measurement.timestamp,
-                                "value": added_measurement.value,
-                                "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
-                                }
-    }
-
-    
-
-# Actuator Roots   
+# Actuator Roots
 
 @app.get("/smarthouse/actuator/{uuid}/current")
 def get_current_actuator_state(uuid: str):
