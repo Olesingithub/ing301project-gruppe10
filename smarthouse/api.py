@@ -280,14 +280,14 @@ def get_current_sensor_measurement(uuid: str):
     This endpoint returns the latest measurement for a specific sensor identified by its UUID.
     """
     # Finn sensoren basert på UUID
-    #sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
-    sensor = smarthouse.get_device_by_id(uuid)
-    if not sensor or (Sensor.is_sensor(sensor) is False):
-    #if sensor is None:
+    sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
+    #sensor = smarthouse.get_device_by_id(uuid)
+    #if not sensor or (Sensor.is_sensor(sensor) is False):
+    if sensor is None:
         raise HTTPException(status_code=404, detail="Sensor not found")
 
     # Hent siste måling fra sensoren
-    latest_measurement = SmartHouseRepository.get_latest_reading(None, sensor.id)
+    latest_measurement = SmartHouseRepository.get_latest_reading(smarthouse, sensor)
 
     #print(f"Requested last measurement by {sensor.id}:")
 
@@ -305,8 +305,25 @@ def get_current_sensor_measurement(uuid: str):
         },
         "room_name": sensor.room.room_name if sensor.room and sensor.room.room_name else "Unknown",
         "floor_id": sensor.room.floor.level if sensor.room and sensor.room.floor else "Unknown",
-    } 
+    }
 
+
+@app.post("/smarthouse/sensor/{uuid}/current", status_code=201)
+def create_current_sensor_measurement(uuid: str):
+    sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
+    #sensor = smarthouse.get_device_by_id(uuid)
+
+    if sensor is None:
+        raise HTTPException(status_code=404, detail="Sensor not found")
+
+    added_measurement = Sensor.last_measurement(sensor)
+    return {
+        "new_measurement": {
+                                "timestamp": added_measurement.timestamp,
+                                "value": added_measurement.value,
+                                "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
+                                }
+    }
 
 @app.post("/smarthouse/sensor/{uuid}/current", status_code=201)
 def create_current_sensor_measurement(uuid: str):
