@@ -380,5 +380,5 @@ def put_actuator_state(uuid: str, new_state: dict):
         "floor_id": actuator.room.floor.level if actuator.room and actuator.room.floor else "Unknown",
     }
 
-if _name_ == '_main_':
+if __name__ == '_main_':
     uvicorn.run(app, host="127.0.0.1", port=8000)
