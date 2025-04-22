@@ -11,7 +11,7 @@ import os
 from urllib.parse import unquote  # Add this import
 
 def setup_database():
-    project_dir = Path(_file_).parent.parent
+    project_dir = Path(__file__).parent.parent
     db_file = project_dir / "data" / "db.sql" # you have to adjust this if you have changed the file name of the database
     return SmartHouseRepository(str(db_file.absolute()))
 
@@ -285,7 +285,7 @@ def get_current_sensor_measurement(uuid: str):
         raise HTTPException(status_code=404, detail="Sensor not found")
 
     # Hent siste måling fra sensoren
-    latest_measurement = SmartHouseRepository.get_latest_reading(None, sensor=sensor.id)
+    latest_measurement = SmartHouseRepository.get_latest_reading(None, sensor.id)
 
     #print(f"Requested last measurement by {sensor.id}:")
 
@@ -315,12 +315,11 @@ def create_current_sensor_measurement(uuid: str):
         raise HTTPException(status_code=404, detail="Sensor not found")
 
     added_measurement = Sensor.last_measurement(sensor)
-    unit = sensor.unit
     return {
         "new_measurement": {
                                 "timestamp": added_measurement.timestamp,
                                 "value": added_measurement.value,
-                                "unit": unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
+                                "unit": sensor.unit if sensor.unit else "Unknown",  # Sjekk om enheten er definert
                                 }
     }
 
