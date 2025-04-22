@@ -278,7 +278,7 @@ def get_current_sensor_measurement(uuid: str):
     This endpoint returns the latest measurement for a specific sensor identified by its UUID.
     """
     # Finn sensoren basert på UUID
-    sensor = next((d for d in smarthouse.get_devices() if d.id == uuid), None)
+    sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
     #sensor = smarthouse.get_device_by_id(None, uuid)
 
     if (sensor is None) or (Sensor.is_sensor(sensor) is False):
@@ -315,7 +315,7 @@ def get_current_sensor_measurement(uuid: str):
 
 @app.post("/smarthouse/sensor/{uuid}/current", status_code=201)
 def create_current_sensor_measurement(uuid: str, m:Sensor.last_measurement()):
-    sensor = next((d for d in smarthouse.get_devices() if d.id == uuid), None)
+    sensor = next((d for d in smarthouse.get_devices() if isinstance(d, Sensor) and d.id == uuid), None)
     #sensor = smarthouse.get_device_by_id(uuid)
 
     if (sensor is None) or (Sensor.is_sensor(sensor) is False):
