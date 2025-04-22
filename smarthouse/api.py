@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from smarthouse.persistence import SmartHouseRepository
-from smarthouse.domain import Sensor, Actuator, ActuatorWithSensor
+from smarthouse.domain import Sensor, Actuator, ActuatorWithSensor, Measurement
 from pathlib import Path
 from fastapi import HTTPException
 import os
@@ -278,7 +278,8 @@ def get_current_sensor_measurement(uuid: str):
     This endpoint returns the latest measurement for a specific sensor identified by its UUID.
     """
     # Finn sensoren basert på UUID
-    sensor = smarthouse.get_device_by_id(uuid)
+    sensor = next((d for d in smarthouse.get_devices() if d.id == uuid), None)
+    #sensor = smarthouse.get_device_by_id(None, uuid)
 
     if (sensor is None) or (Sensor.is_sensor(sensor) is False):
         raise HTTPException(status_code=404, detail="Sensor not found")
@@ -313,14 +314,18 @@ def get_current_sensor_measurement(uuid: str):
     """
 
 @app.post("/smarthouse/sensor/{uuid}/current", status_code=201)
-def create_current_sensor_measurement(uuid: str):
-    sensor = smarthouse.get_device_by_id(uuid)
+def create_current_sensor_measurement(uuid: str, m:Sensor.last_measurement()):
+    sensor = next((d for d in smarthouse.get_devices() if d.id == uuid), None)
+    #sensor = smarthouse.get_device_by_id(uuid)
 
     if (sensor is None) or (Sensor.is_sensor(sensor) is False):
         raise HTTPException(status_code=404, detail="Sensor not found")
 
-    added_measurement = Sensor.last_measurement(sensor)
-    return added_measurement
+    m(sensor)
+    return {
+        "timestamp": m.timestamp,
+        "value": m.value,
+        "unit": m.unit}
 
     
 
