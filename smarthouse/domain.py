@@ -3,15 +3,16 @@ from random import random
 from typing import List, Optional, Union 
 from abc import abstractmethod
 
-class Measurement:
+from pydantic import BaseModel
+
+class Measurement(BaseModel):
     """
     This class represents a measurement taken from a sensor.
     """
+    timestamp: str 
+    value: float 
+    unit: str | None
 
-    def __init__(self, timestamp:str , value: float, unit: str) -> None:
-        self.timestamp = timestamp
-        self.value = value
-        self.unit = unit
 
 
 class Device:
@@ -48,7 +49,7 @@ class Sensor(Device):
         return False
     
     def last_measurement(self) -> Measurement:
-        return Measurement(datetime.now().isoformat(), random() * 10, self.unit)
+        return Measurement(timestamp= datetime.now().isoformat(), value=random() * 10, unit=self.unit)
 
         
 
@@ -92,9 +93,9 @@ class ActuatorWithSensor(Actuator, Sensor):
 
 class Floor:
 
-    def __init__(self, level):
+    def __init__(self, level: int):
         self.level = level
-        self.rooms = []
+        self.rooms : list[Room] = []
 
 
 class Room:
@@ -103,7 +104,8 @@ class Room:
         self.floor = floor 
         self.room_size = room_size
         self.room_name = room_name
-        self.devices : List[Device]= []
+        self.devices : list[Device]= []
+        self.db_id :int | None = None
 
 
 
@@ -199,4 +201,5 @@ class SmartHouse:
                 return d
         return None
 
-       
+        
+

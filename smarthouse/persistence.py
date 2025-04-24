@@ -2,15 +2,14 @@ import sqlite3
 from typing import Optional
 from smarthouse.domain import Actuator, ActuatorWithSensor, Measurement, Room, Sensor, SmartHouse
 
-
 class SmartHouseRepository:
     """
-    Provides the functionality to persist and load a _SmartHouse_ object
+    Provides the functionality to persist and load a _SmartHouse_ object 
     in a SQLite database.
     """
 
     def __init__(self, file: str) -> None:
-        self.file = file
+        self.file = file 
         self.conn = sqlite3.connect(file, check_same_thread=False)
 
     def __del__(self):
@@ -19,12 +18,12 @@ class SmartHouseRepository:
     def cursor(self) -> sqlite3.Cursor:
         """
         Provides a _raw_ SQLite cursor to interact with the database.
-        When calling this method to obtain a cursors, you have to
+        When calling this method to obtain a cursors, you have to 
         rememeber calling `commit/rollback` and `close` yourself when
         you are done with issuing SQL commands.
         """
         return self.conn.cursor()
-    
+
     def reconnect(self):
         """
         Closes the current connection towards the database and opens a fresh one.
@@ -32,12 +31,13 @@ class SmartHouseRepository:
         self.conn.close()
         self.conn = sqlite3.connect(self.file)
 
+    
     def load_smarthouse_deep(self):
         """
-        This method retrives the complete single instance of the _SmartHouse_
+        This method retrives the complete single instance of the _SmartHouse_ 
         object stored in this database. The retrieval yields a _deep_ copy, i.e.
-        all referenced objects within the object structure (e.g. floors, rooms, devices)
-        are retrieved as well.
+        all referenced objects within the object structure (e.g. floors, rooms, devices) 
+        are retrieved as well. 
         """
         result = SmartHouse()
         cursor = self.cursor()
@@ -67,11 +67,9 @@ class SmartHouseRepository:
                 result.register_device(room, Sensor(device_tuple[0], device_tuple[5], device_tuple[4], device_tuple[2]))
             elif category == 'actuator':
                 if device_tuple[2] == 'Heat Pump':
-                    result.register_device(room, ActuatorWithSensor(device_tuple[0], device_tuple[5], device_tuple[4],
-                                                                    device_tuple[2]))
+                    result.register_device(room, ActuatorWithSensor(device_tuple[0], device_tuple[5], device_tuple[4], device_tuple[2]))
                 else:
-                    result.register_device(room,
-                                           Actuator(device_tuple[0], device_tuple[5], device_tuple[4], device_tuple[2]))
+                    result.register_device(room, Actuator(device_tuple[0], device_tuple[5], device_tuple[4], device_tuple[2]))
 
         for dev in result.get_devices():
             if isinstance(dev, Actuator):
@@ -84,8 +82,66 @@ class SmartHouseRepository:
                 else:
                     dev.turn_on(float(state))
 
+
         cursor.close()
         return result
+
+
+    def get_readings(self, sensor: str, limit_n: int | None) -> list[Measurement]:
+        cursor = self.cursor()
+        if limit_n:
+            cursor.execute("""\
+SELECT ts, value, unit 
+FROM measurements
+WHERE device = ?
+ORDER BY datetime(ts) DESC 
+LIMIT ?
+            """, (sensor, limit_n))
+        else:
+            cursor.execute("""\
+SELECT ts, value, unit 
+FROM measurements
+WHERE device = ?
+ORDER BY datetime(ts) DESC 
+            """, (sensor,))
+        tuples = cursor.fetchall()
+        result = [Measurement(timestamp=t[0], value=t[1], unit=t[2]) for t in tuples]
+        cursor.close()
+        return result
+
+
+    def delete_oldest_reading(self, sensor: str) -> Measurement | None:
+        c = self.cursor()
+        query = """\
+SELECT ts, value, unit FROM measurements WHERE device = ? ORDER BY datetime(ts) ASC LIMIT 1
+        """
+        c.execute(query, (sensor,))
+        tup = c.fetchone()
+        if tup:
+            query = f"""
+    DELETE FROM measurements
+    WHERE device = ?
+    AND ts = ?
+            """
+            c.execute(query, (sensor, tup[0]))
+            self.conn.commit()
+        c.close()
+        if tup:
+            return Measurement(timestamp=tup[0], value=tup[1], unit=tup[2])
+        else:
+            return None
+
+            
+
+    def insert_measurement(self, sensor: str, measurement: Measurement) -> None:
+        query = f"""
+INSERT INTO measurements (device, ts, value, unit) VALUES (?, ?, ?, ?)
+        """
+        c = self.cursor()
+        c.execute(query, (sensor, measurement.timestamp, measurement.value, measurement.unit))
+        self.conn.commit()
+        c.close()
+
 
     def get_latest_reading(self, sensor) -> Optional[Measurement]:
         """
@@ -103,13 +159,14 @@ limit 1;
         result = c.fetchall()
         if len(result) == 0:
             return None
-        m = Measurement(result[0][0], float(result[0][1]), result[0][2])
+        m = Measurement(timestamp=result[0][0],value=float(result[0][1]),unit=result[0][2])
         c.close()
         return m
 
+
     def update_actuator_state(self, actuator):
         """
-        Saves the state of the given actuator in the database.
+        Saves the state of the given actuator in the database. 
         """
         if isinstance(actuator, Actuator):
             s = 'NULL'
@@ -126,41 +183,19 @@ WHERE device = '{actuator.id}';
             c.execute(query)
             self.conn.commit()
             c.close()
-            
-    def update_room_name(self, room: Room, new_name: str) -> None: 
-        #denne for å endre navn på Living Room / Kitchen til Livingroom and kitchen
-        """
-        Oppdaterer navnet på et gitt rom i databasen.
-        Fjerner også spesialtegn som skråstrek (/) fra navnet.
-         """
-        if isinstance(room, Room) and room.db_id is not None:
-            # Fjern skråstrek og andre spesialtegn fra det nye navnet
-            sanitized_name = new_name.replace("/", "").strip()
 
-            query = """
-            UPDATE rooms
-            SET name = ?
-            WHERE id = ?;
-            """
-            cursor = self.cursor()
-            cursor.execute(query, (sanitized_name, room.db_id))
-            self.conn.commit()
-            cursor.close()
 
-            # Oppdater også navnet i Room-objektet
-            room.room_name = sanitized_name
 
     # statistics
 
-    def calc_avg_temperatures_in_room(self, room, from_date: Optional[str] = None,
-                                      until_date: Optional[str] = None) -> dict:
+    def calc_avg_temperatures_in_room(self, room, from_date: Optional[str] = None, until_date: Optional[str] = None) -> dict:
         """Calculates the average temperatures in the given room for the given time range by
-        fetching all available temperature sensor data (either from a dedicated temperature sensor
-        or from an actuator, which includes a temperature sensor like a heat pump) from the devices
+        fetching all available temperature sensor data (either from a dedicated temperature sensor 
+        or from an actuator, which includes a temperature sensor like a heat pump) from the devices 
         located in that room, filtering the measurement by given time range.
         The latter is provided by two strings, each containing a date in the ISO 8601 format.
         If one argument is empty, it means that the upper and/or lower bound of the time range are unbounded.
-        The result should be a dictionary where the keys are strings representing dates (iso format) and
+        The result should be a dictionary where the keys are strings representing dates (iso format) and 
         the values are floating point numbers containing the average temperature that day.
         """
         result = {}
@@ -185,6 +220,7 @@ WHERE device = '{actuator.id}';
                 result[row[0]] = float(row[1])
         return result
 
+    
     def calc_hours_with_humidity_above(self, room, date: str) -> list:
         """
         This function determines during which hours of the given day
@@ -217,6 +253,8 @@ HAVING COUNT(m.value) > 3;
                 result.append(int(h[0]))
         return result
 
+
+    
 
 
 
