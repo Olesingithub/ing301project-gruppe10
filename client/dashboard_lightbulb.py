@@ -34,8 +34,9 @@ def lightbulb_cmd(state, did):
         response_json = response.json()
         response.raise_for_status()
         print(response_json)
+        logging.info(f"Dashboard: {new_state}")
     else:
-        return
+        logging.info(f"Dashboard: {current_state}")
 
 
     # TODO: END
