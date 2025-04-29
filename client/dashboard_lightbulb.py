@@ -15,21 +15,28 @@ def lightbulb_cmd(state, did):
 
     # TODO: START
     # send HTTP request with new actuator state to cloud service
-    url_get = common.BASE_URL + 'actuator/{uuid}/current'
-    url_put = common.BASE_URL + 'actuator/{uuid}'
+    url_get = common.BASE_URL + "actuator/" + did + "/current/"
+    url_put = common.BASE_URL + "actuator/" + did + "/"
     # get request
-    r = requests.get(url_get, did)
     current_state = ActuatorState.from_json(did)
+    try:
+        response = requests.get(url_get, did)
+        response_json = response.json()
+        response.raise_for_status()
+        print(response_json)
+    # If the request fails (404) then print the error.
+    except requests.exceptions.HTTPError as error:
+        print(error)
 
     if new_state != current_state:
-        logging.info(f"New state: {new_state}")
+        #put request
+        response = requests.put(url_put, did)
+        response_json = response.json()
+        response.raise_for_status()
+        print(response_json)
     else:
-        logging.info(f"Current state: {current_state}")
+        return
 
-
-
-    # put request
-    r = requests.put(url_put, did)
 
     # TODO: END
 
