@@ -1,4 +1,3 @@
-import json
 import tkinter as tk
 from tkinter import ttk
 import logging
@@ -16,15 +15,21 @@ def lightbulb_cmd(state, did):
 
     # TODO: START
     # send HTTP request with new actuator state to cloud service
-
+    url_get = common.BASE_URL + 'actuator/{uuid}/current'
+    url_put = common.BASE_URL + 'actuator/{uuid}'
     # get request
-    r = requests.get(common.BASE_URL + 'actuator/{uuid}/current', did)
-    current_state = ActuatorState(r.json())
+    r = requests.get(url_get, did)
+    current_state = ActuatorState.from_json(did)
+
+    if new_state != current_state:
+        logging.info(f"New state: {new_state}")
+    else:
+        logging.info(f"Current state: {current_state}")
 
 
 
     # put request
-    r = requests.put(common.BASE_URL + 'actuator/{uuid}/', did)
+    r = requests.put(url_put, did)
 
     # TODO: END
 
