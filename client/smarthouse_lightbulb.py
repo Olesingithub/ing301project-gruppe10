@@ -31,6 +31,11 @@ class Actuator:
         # send request to cloud service with regular intervals and
         # set state of actuator according to the received response
 
+        while True:
+            logging.info(f"Actuator {self.did}: {self.state.state}")
+
+            time.sleep(common.LIGHTBULB_SIMULATOR_SLEEP_TIME)
+
         logging.info(f"Client {self.did} finishing")
 
         # TODO: END

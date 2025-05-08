@@ -1,3 +1,4 @@
+import json
 import tkinter as tk
 from tkinter import ttk
 import logging
@@ -17,26 +18,25 @@ def lightbulb_cmd(state, did):
     # send HTTP request with new actuator state to cloud service
     url_get = common.BASE_URL + "actuator/" + did + "/current/"
     url_put = common.BASE_URL + "actuator/" + did + "/"
-    # get request
     current_state = ActuatorState.from_json(did)
-    try:
-        response = requests.get(url_get, did)
-        response_json = response.json()
-        response.raise_for_status()
-        print(response_json)
-    # If the request fails (404) then print the error.
-    except requests.exceptions.HTTPError as error:
-        print(error)
+    # get request
+    response = requests.get(url_get, did)
+    response_json = response.json()
+    print(response_json)
 
     if new_state != current_state:
-        #put request
-        response = requests.put(url_put, did)
-        response_json = response.json()
-        response.raise_for_status()
-        print(response_json)
-        logging.info(f"Dashboard: {new_state}")
-    else:
-        logging.info(f"Dashboard: {current_state}")
+        #payload = {'state': new_state}
+        json_data = ActuatorState.from_json(did)
+        data = json.loads(json_data)
+        field_key = 'state'
+        if field_key in data:
+            data[field_key] = new_state
+            json_data = json.dumps(data)
+        update = requests.put(url_put, did, data=json_data)
+        update_json = update.json()
+        print(update_json)
+
+
 
 
     # TODO: END
