@@ -16,25 +16,21 @@ def lightbulb_cmd(state, did):
 
     # TODO: START
     # send HTTP request with new actuator state to cloud service
-    url_get = common.BASE_URL + "actuator/" + did + "/current/"
-    url_put = common.BASE_URL + "actuator/" + did + "/"
-    current_state = ActuatorState.from_json(did)
+    url_get = common.BASE_URL + f"actuator/{did}/current/"
+    url_put = common.BASE_URL + f"actuator/{did}/"
+    #current_state = ActuatorState.from_json(did)
     # get request
     response = requests.get(url_get, did)
     response_json = response.json()
     print(response_json)
+    """payload = {'state': 'new_state'}
+    update = requests.put(url_put, did, data={payload})
+    update_json = ActuatorState.to_json().u"""
 
-    if new_state != current_state:
-        #payload = {'state': new_state}
-        json_data = ActuatorState.from_json(did)
-        data = json.loads(json_data)
-        field_key = 'state'
-        if field_key in data:
-            data[field_key] = new_state
-            json_data = json.dumps(data)
-        update = requests.put(url_put, did, data=json_data)
+    """if new_state != current_state:
+
         update_json = update.json()
-        print(update_json)
+        print(update_json)"""
 
 
 

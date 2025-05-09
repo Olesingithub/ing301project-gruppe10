@@ -30,10 +30,12 @@ class Actuator:
         # TODO: START
         # send request to cloud service with regular intervals and
         # set state of actuator according to the received response
-
         while True:
-            logging.info(f"Actuator {self.did}: {self.state.state}")
-
+            payload = {'state': 'new state'}
+            r = requests.get(common.BASE_URL + f"actuator/{self.did}/current/", payload)
+            response_json = r.json()
+            new_state = response_json['state']
+            u = requests.put(common.BASE_URL + f"actuator/{self.did}/")
             time.sleep(common.LIGHTBULB_SIMULATOR_SLEEP_TIME)
 
         logging.info(f"Client {self.did} finishing")
@@ -46,7 +48,9 @@ class Actuator:
         # TODO: START
 
         # start thread simulating physical light bulb
+        logging.info(f"Actuator {self.did} starting")
 
+        time.sleep(common.LIGHTBULB_SIMULATOR_SLEEP_TIME)
         # start thread receiving state from the cloud
 
         # TODO: END
