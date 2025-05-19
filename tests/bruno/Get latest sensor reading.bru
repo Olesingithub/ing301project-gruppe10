@@ -1,0 +1,15 @@
+meta {
+  name: Get latest sensor reading
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://127.0.0.1:8000/smarthouse/sensor/{{uuid}}/current
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  uuid: 5e13cabc-5c58-4bb3-82a2-3039e4480a6d
+}

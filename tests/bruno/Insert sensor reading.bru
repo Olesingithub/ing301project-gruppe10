@@ -1,0 +1,30 @@
+meta {
+  name: Insert sensor reading
+  type: http
+  seq: 9
+}
+
+post {
+  url: http://127.0.0.1:8000/smarthouse/sensor/{{uuid}}/current
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "timestamp": "2024-01-28 12:00:00",
+      "value": 19.0,
+      "unit": "°C"
+    }
+}
+
+vars:pre-request {
+  uuid: 5e13cabc-5c58-4bb3-82a2-3039e4480a6d
+}
+
+assert {
+  res.status: eq 201
+  res.body.value: eq 19.0
+  res.body.unit: eq °C
+  res.body.timestamp: eq 2024-01-28 12:00:00
+}

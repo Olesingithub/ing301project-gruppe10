@@ -31,21 +31,40 @@ class Sensor:
 
         logging.info(f"Sensor Client {self.did} starting")
 
-        # TODO: START
+        # TODO START
         # send temperature to the cloud service with regular intervals
+
+        while True:
+
+            logging.info(f"Sensor Client {self.did} {self.measurement.get_temperature()}")
+
+            url = common.BASE_URL + f"sensor/{self.did}/current"
+
+            payload = self.measurement.to_json();
+
+            headers = {
+                'Content-Type': 'application/json'
+            }
+
+            response = requests.request("POST", url, headers=headers, data=payload)
+
+            time.sleep(common.TEMPERATURE_SENSOR_CLIENT_SLEEP_TIME)
 
         logging.info(f"Client {self.did} finishing")
 
-        # TODO: END
+        # TODO END
 
     def run(self):
 
-        pass
-        # TODO: START
+        # TODO START
 
         # create and start thread simulating physical temperature sensor
+        sensor_thread = threading.Thread(target=self.simulator)
+        sensor_thread.start()
 
         # create and start thread sending temperature to the cloud service
+        client_thread = threading.Thread(target=self.client)
+        client_thread.start()
 
-        # TODO: END
+        # TODO END
 

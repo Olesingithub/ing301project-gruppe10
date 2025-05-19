@@ -1,0 +1,28 @@
+meta {
+  name: Delete oldes reading
+  type: http
+  seq: 11
+}
+
+delete {
+  url: http://127.0.0.1:8000/smarthouse/sensor/{{uuid}}/oldest
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "timestamp": "2024-01-28 12:00:00",
+      "value": 19.0,
+      "unit": "°C"
+    }
+}
+
+vars:pre-request {
+  uuid: 5e13cabc-5c58-4bb3-82a2-3039e4480a6d
+}
+
+assert {
+  res.status: eq 200
+  res.body.timestamp: eq 2024-01-24 00:00:00
+}

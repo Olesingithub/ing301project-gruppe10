@@ -1,0 +1,22 @@
+meta {
+  name: Get specific room
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://127.0.0.1:8000/smarthouse/floor/{{fid}}/room/{{rid}}
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  fid: 2
+  rid: 6
+}
+
+assert {
+  res.status: eq 200
+  res.body.room_size: eq 11.75
+  res.body.room_name: eq Office
+}

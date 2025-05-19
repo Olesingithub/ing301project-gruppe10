@@ -1,0 +1,37 @@
+meta {
+  name: Sensor Readings
+  type: http
+  seq: 10
+}
+
+get {
+  url: http://127.0.0.1:8000/smarthouse/sensor/{{uuid}}/values?n=3
+  body: none
+  auth: none
+}
+
+query {
+  n: 3
+}
+
+vars:pre-request {
+  uuid: 5e13cabc-5c58-4bb3-82a2-3039e4480a6d
+}
+
+tests {
+  test("returns exactly 3 results", function() {
+    const data = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(data.length).to.equal(3);
+  });
+  
+  test("contains the recently added data on top", function() {
+    const data = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    const first = data[0]
+    expect(first.timestamp).to.equal("2024-01-28 12:00:00");
+    expect(first.value).to.equal(19);
+    expect(first.unit).to.equal("°C");
+  });
+  
+}

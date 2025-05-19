@@ -1,0 +1,32 @@
+meta {
+  name: Get all readings
+  type: http
+  seq: 12
+}
+
+get {
+  url: http://127.0.0.1:8000/smarthouse/sensor/{{uuid}}/values
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  uuid: 5e13cabc-5c58-4bb3-82a2-3039e4480a6d
+}
+
+tests {
+  test("should be one less than before", function() {
+    const data = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    // should be 48 reading now
+    expect(data.length).to.equal(48);
+  });
+  
+  test("The previous oldest reading diappeared", function() {
+    const data = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    const last = data[47]
+    expect(last.timestamp).to.equal("2024-01-24 02:00:00");
+  });
+  
+}

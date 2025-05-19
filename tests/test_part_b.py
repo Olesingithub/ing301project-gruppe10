@@ -1,10 +1,6 @@
 import unittest
-
-from pathlib import Path
-import sys 
-sys.path.append(str(Path().parent.absolute()))
-
 from smarthouse.persistence import SmartHouseRepository
+from pathlib import Path
 
 class SmartHouseTest(unittest.TestCase):
     file = Path(__file__).parent / "../data/db.sql"

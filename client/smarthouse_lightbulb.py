@@ -27,32 +27,39 @@ class Actuator:
 
         logging.info(f"Actuator Client {self.did} starting")
 
-        # TODO: START
-        # send request to cloud service with regular intervals and
-        # set state of actuator according to the received response
+        # TODO START
+        # send request to cloud service with regular intervals to obtain actuator state
+
+        url = common.BASE_URL + f"actuator/{self.did}/current"
+
+        payload = {}
+        headers = {}
+
         while True:
-            payload = {'state': 'new state'}
-            r = requests.get(common.BASE_URL + f"actuator/{self.did}/current/", payload)
-            response_json = r.json()
-            new_state = response_json['state']
-            u = requests.put(common.BASE_URL + f"actuator/{self.did}/")
-            time.sleep(common.LIGHTBULB_SIMULATOR_SLEEP_TIME)
+
+            response = requests.request("GET", url, headers=headers, data=payload)
+
+            self.state = ActuatorState.from_json(response.text)
+
+            logging.info(f"Actuator Client {self.did} {self.state.state}")
+            time.sleep(common.LIGHTBULB_CLIENT_SLEEP_TIME)
 
         logging.info(f"Client {self.did} finishing")
 
-        # TODO: END
+        # TODO END
 
     def run(self):
 
-        pass
-        # TODO: START
+        # TODO START
 
         # start thread simulating physical light bulb
-        logging.info(f"Actuator {self.did} starting")
+        sensor_thread = threading.Thread(target=self.simulator)
+        sensor_thread.start()
 
-        time.sleep(common.LIGHTBULB_SIMULATOR_SLEEP_TIME)
         # start thread receiving state from the cloud
+        client_thread = threading.Thread(target=self.client)
+        client_thread.start()
 
-        # TODO: END
+        # TODO END
 
 

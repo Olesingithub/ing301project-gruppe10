@@ -1,24 +1,24 @@
 meta {
-  name: Information about a speficific floor
+  name: Info for rooms on floor
   type: http
-  seq: 3
+  seq: 4
 }
 
 get {
-  url: http://127.0.0.1:8000/smarthouse/floor/{{fid}}
+  url: http://127.0.0.1:8000/smarthouse/floor/{{fid}}/room
   body: none
   auth: none
 }
 
 vars:pre-request {
-  fid: 1
+  fid: 2
 }
 
 tests {
   test("first floor has 5 rooms", function() {
     const data = res.getBody();
     expect(res.getStatus()).to.equal(200);
-    expect(data.rooms.length).to.equal(5);
+    expect(data.length).to.equal(7);
   });
   
 }

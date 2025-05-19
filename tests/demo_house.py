@@ -48,3 +48,5 @@ DEMO_HOUSE.register_device(gr3, air_quality)
 DEMO_HOUSE.register_device(office, plug)
 DEMO_HOUSE.register_device(bath2, dehumid)
 DEMO_HOUSE.register_device(gr2, bulp)
+
+

@@ -1,0 +1,26 @@
+meta {
+  name: Turn off actuator
+  type: http
+  seq: 15
+}
+
+put {
+  url: http://127.0.0.1:8000/smarthouse/actuator/{{uuid}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "state": "off"
+  }
+}
+
+vars:pre-request {
+  uuid: 8d4e4c98-21a9-4d1e-bf18-523285ad90f6
+}
+
+assert {
+  res.status: eq 200
+  res.body.state: eq "off"
+}

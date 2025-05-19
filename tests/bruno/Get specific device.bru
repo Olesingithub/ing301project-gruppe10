@@ -1,0 +1,22 @@
+meta {
+  name: Get specific device
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://127.0.0.1:8000/smarthouse/device/{{uuid}}
+  body: none
+  auth: none
+}
+
+vars:pre-request {
+  uuid: 4d8b1d62-7921-4917-9b70-bbd31f6e2e8e
+}
+
+assert {
+  res.status: eq 200
+  res.body.model: eq SmartTemp 42
+  res.body.supplier: eq AetherCorp
+  res.body.device_category: eq sensor
+}
